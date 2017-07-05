@@ -1,10 +1,311 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Http } from '@angular/http';
+
+import * as _ from 'lodash';
+
+import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+
+import { FormlyFieldConfig } from 'ng-formly';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements OnInit {
+
+	@ViewChild('langTabs') langTabs: NgbTabset;
+
+  form: FormGroup;
+	model: any;
+	fields: Array<FormlyFieldConfig>;
+
+	languages: any[];
+	selectedLang: string;
+
+	iptcData: any;
+	keywordsOptions: any;
+
+	titleField: FormlyFieldConfig;
+	iptcField: FormlyFieldConfig;
+	keywordsField: FormlyFieldConfig;
+
+	constructor(private http: Http, private formBuilder: FormBuilder) { }
+
+	ngOnInit() {
+		  this.form = this.formBuilder.group({
+				// title: new FormControl(),
+				// iptc: new FormControl(),
+				// keywords: this.formBuilder.group({
+				// 	en: [],
+				// 	fr: [],
+				// 	de: [],
+				// })
+			});
+
+			this.selectedLang = 'en';
+
+			this.keywordsOptions = {
+				en: [ { item: 'Default IPTC keyword'}],
+				fr: [ { item: 'Manual keyword'}],
+				de: [ ]
+			}
+
+			this.initData();
+
+			this.initFormlyFields(this.selectedLang);
+
+			this.getFields();
+
+			// setTimeout(() => this.form.setValue(this.model));
+	}
+
+	initData() {
+		this.iptcData = [
+			{
+				id: 0,
+				label: 'IPTC 1',
+				keywords: {
+					en: ['English keyword 1'],
+					fr: ['French keyword 1', 'French keyword 2'],
+					de: [ ]
+				}
+			},
+			{
+				id: 1,
+				label: 'IPTC 2',
+				keywords: {
+					en: ['English keyword 3'],
+					fr: ['French keyword 3'],
+					de: ['German keyword 3']
+				}
+			},
+			{
+				id: 2,
+				label: 'Default IPTC',
+				keywords: {
+					en: ['Default IPTC keyword'],
+				}
+			},
+		];
+
+		this.languages = [
+			{ code: 'en', label: 'English' },
+			{ code: 'fr', label: 'French' },
+			{ code: 'de', label: 'German' },
+		];
+
+		this.model = {
+			title: {
+				en: 'English Title',
+				fr: 'French Title'
+			},
+			iptc: [ 2 ],
+			keywords: {
+				en: ['Default keyword'],
+				fr: ['Manual keyword'],
+				de: []
+			}
+		};
+	}
+
+	initFormlyFields(lang: string) {
+		this.initMultilangFields(lang);
+		this.initSimpleFields();
+	}
+
+	initMultilangFields(lang: string) {
+		this.keywordsField = {
+			id: 'keywords',
+			key: `keywords.${lang}`,
+			type: 'selectize',
+			className: 'col',
+			templateOptions: {
+				label: 'Keywords',
+				placeholder: 'Keywords',
+				selectizeClassName: 'selectize-sm',
+				config: {
+					maxItems: null,
+					create: (input, callback) => {
+						const option = { item: input };
+
+						if(!this.keywordsOptions[lang]) {
+							this.keywordsOptions[lang] = [];
+						}
+
+						this.keywordsOptions[lang].push(option);
+						callback(option);
+					},
+					labelField: 'item',
+					valueField: 'item',
+					searchField: ['item'],
+					plugins: [ 'remove_button' ],
+				},
+				value: this.model.keywords && this.model.keywords[lang],
+				options: this.keywordsOptions[lang],
+				required: true,
+			},
+		};
+
+		this.titleField = {
+      id: 'title',
+      key: `title.${lang}`,
+      type: 'input-horizontal',
+      templateOptions: {
+        label: 'Title',
+        placeholder: 'Event Title',
+        inputClassName: 'form-control-sm',
+        required: true,
+      },
+      expressionProperties: { }
+    };
+	}
+
+	initSimpleFields() {
+		this.iptcField = {
+			key: 'iptc',
+			type: 'selectize',
+			className: 'col',
+			templateOptions: {
+				label: 'IPTC',
+				placeholder: 'IPTC',
+				selectizeClassName: 'selectize-sm',
+				options: this.iptcData,
+				config: {
+					options: [],
+					valueField: 'id',
+					labelField: 'label',
+					searchField: 'label',
+					maxItems: null,
+					create: false,
+					persist: false,
+					plugins: [ 'remove_button' ],
+					value: this.model.iptc,
+					onItemAdd: (item) => {
+						this.onChangeIPTC(item, (keywords, iptcKeywords, lang) => {
+							// transform IPTC keywords to options and add them to the keywords options
+							this.addKeywords(this.keywordsOptions, iptcKeywords, lang, this.keywordToOption);
+
+							// Add IPTC keywords to the keywords model
+							this.addKeywords(keywords, iptcKeywords, lang);
+
+						});
+					},
+					onItemRemove: (value) => {
+						this.onChangeIPTC(value, (keywords, iptcKeywords, lang) => {
+							// Remove IPTC keywords to the keywords model
+							this.removeKeywords(keywords, iptcKeywords, lang);
+						});
+
+					},
+				},
+				required: true,
+			}
+		};
+	}
+
+	/**
+	 * Add or Remove keywords on IPTC change
+	 * @param iptcID
+	 * @param method
+	 */
+	private onChangeIPTC(
+		iptcID: string,
+		method: (target: any, origin: any, lang: string) => void
+	): void {
+		const iptcItem = this.iptcData[iptcID];
+		const iptcKeywords = iptcItem.keywords || {};
+
+		// Creating a new keywords object with the existing keywords
+		// const keywords = Object.assign({}, this.model.keywords);
+
+		// For each IPTC keywords lang
+		for(let lang in iptcKeywords) {
+
+			// // Init form control
+			if(!this.form.get('keywords').get(lang)) {
+				(<FormGroup> this.form.get('keywords')).addControl(lang, new FormControl());
+			}
+
+			// Call add or remove method
+			method(this.model.keywords, iptcKeywords, lang);
+
+		}
+
+		// Creating form model with the existing model and the new keywords
+		this.form.get('keywords').setValue(this.model.keywords);
+	}
+
+	/**
+	 * Add origin keywords to target
+	 * @param target
+	 * @param origin
+	 * @param lang
+	 * @param map
+	 */
+	private addKeywords(target: any, origin: any, lang: string, map?): void {
+		if(!target || !origin || !lang) {
+			return;
+		}
+
+		const keywords = map && typeof map === 'function' ? origin[lang].map(map) : origin[lang];
+
+		if(!target[lang]) {
+			target[lang] = [];
+		}
+
+		target[lang].push(...keywords);
+	}
+
+	/**
+	 * Remove origin keywords from target
+	 * @param target
+	 * @param origin
+	 * @param lang
+	 */
+	private removeKeywords(target: any, origin: any, lang: string): void {
+		if(!target || !origin || !lang) {
+			return;
+		}
+
+		_.remove(target[lang], elem => origin[lang].indexOf(elem) != -1);
+	}
+
+	/**
+	 * Transform a keyword in a keywordOption for selectize
+	 * @param keyword
+	 * @return {{item: string}}
+	 */
+	private keywordToOption(keyword: string): any {
+		return { item: keyword };
+	}
+
+	getFields() {
+		const fields = [
+			this.titleField,
+			this.iptcField,
+			this.keywordsField
+		];
+
+		this.fields = fields;
+	}
+
+	onChangeLang(payload: NgbTabChangeEvent): void {
+    this.selectedLang = payload.nextId;
+
+    // const model = Object.assign({}, this.model);
+
+		this.initMultilangFields(this.selectedLang);
+		this.getFields();
+
+
+    // setTimeout(() => this.model = model);
+    // this.form.patchValue(model);
+  }
+
+  submit(model) {
+    console.log(model);
+  }
+
 }

@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
         this.model = {
           title: {
             en: 'This is an English Title',
-            fr: 'This is a French Title'
+            fr: 'This is a French Title',
           },
           note: 'Test note',
           iptc: [ 2 ],
@@ -158,15 +158,21 @@ export class AppComponent implements OnInit {
 
 		this.titleField = {
       id: 'title',
-      key: `title.${lang}`,
-      type: 'input-horizontal',
+      type: 'multilang-field',
       templateOptions: {
+        key: 'title',
         label: 'Title (multi)',
-        placeholder: 'Title',
-        inputClassName: 'form-control-sm',
-        required: true,
+        languages: this.languages,
+        selectedLang: this.selectedLang,
       },
-      expressionProperties: { }
+      fieldGroup: [{
+        type: 'input',
+        templateOptions: {
+          placeholder: 'Title',
+          inputClassName: 'form-control-sm',
+          required: true,
+        },
+      }],
     };
 	}
 
@@ -308,11 +314,11 @@ export class AppComponent implements OnInit {
 	getFields() {
 		const fields = [
 			this.titleField,
-			this.noteField,
-			this.buildFieldGroup('test', [
-			  this.iptcField,
-        this.keywordsField
-      ]),
+      // this.noteField,
+      // this.buildFieldGroup('test', [
+			 //  this.iptcField,
+      //   this.keywordsField
+      // ]),
 		];
 
     this.fields = fields;
@@ -350,7 +356,11 @@ export class AppComponent implements OnInit {
   }
 
   submit(model) {
-    console.log(model, this.form.value);
+	  console.group('submit');
+    console.log('model', model);
+    console.log('form value', this.form.value);
+    console.log('form', this.form);
+    console.groupEnd();
   }
 
 }

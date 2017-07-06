@@ -11,6 +11,9 @@ import { FormlyFieldSelect } from './types/select';
 import { FormlyFieldRadio } from './types/radio';
 import { FormlyFieldSelectize } from './types/selectize';
 
+import { FormlyRepeatSection } from './types/repeat-section';
+import { FormlyMultilangField } from './types/multilang';
+
 import { FormlyHorizontalWrapper } from './wrappers/horizontal.wrapper';
 import { FormlyPanelWrapper } from './wrappers/panel.wrapper';
 import { FormlyLabelWrapper } from './wrappers/label.wrapper';
@@ -32,6 +35,7 @@ import { formlyConfig } from './formly-config';
     FormlyHorizontalWrapper, FormlyPanelWrapper, FormlyLabelWrapper,
     FormlyFieldInput, FormlyFieldTextArea, FormlyFieldSelect, FormlyFieldRadio,
     FormlyFieldSelectize,
+    FormlyRepeatSection, FormlyMultilangField,
   ],
   exports: [ FormlyModule, FormlyBootstrapModule ]
 })

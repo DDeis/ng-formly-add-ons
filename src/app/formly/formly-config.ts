@@ -4,6 +4,9 @@ import { FormlyFieldSelect } from './types/select';
 import { FormlyFieldRadio } from './types/radio';
 import { FormlyFieldSelectize } from './types/selectize';
 
+import { FormlyRepeatSection } from './types/repeat-section';
+import { FormlyMultilangField } from './types/multilang';
+
 import { FormlyHorizontalWrapper } from './wrappers/horizontal.wrapper';
 import { FormlyPanelWrapper } from './wrappers/panel.wrapper';
 import { FormlyLabelWrapper } from './wrappers/label.wrapper';
@@ -12,27 +15,15 @@ import { Validators } from '@angular/forms';
 
 export const formlyConfig = {
   types: [
-    {
-      name: 'input',
-      component: FormlyFieldInput,
-    },
-    {
-      name: 'textarea',
-      component: FormlyFieldTextArea,
-    },
-    {
-      name: 'select',
-      component: FormlyFieldSelect,
-    },
-    {
-      name: 'radio',
-      component: FormlyFieldRadio,
-    },
-    {
-      name: 'selectize',
-      component: FormlyFieldSelectize,
-      wrappers: ['fieldset', 'label'],
-    },
+    { name: 'input', component: FormlyFieldInput },
+    { name: 'textarea', component: FormlyFieldTextArea },
+    { name: 'select', component: FormlyFieldSelect },
+    { name: 'radio', component: FormlyFieldRadio },
+    { name: 'selectize', component: FormlyFieldSelectize, wrappers: ['fieldset', 'label'] },
+
+    { name: 'repeat-section', component: FormlyRepeatSection },
+    { name: 'multilang-field', component: FormlyMultilangField },
+
     { name: 'input-horizontal', extends: 'input' },
     { name: 'textarea-horizontal', extends: 'textarea' },
     { name: 'select-horizontal', extends: 'select' },

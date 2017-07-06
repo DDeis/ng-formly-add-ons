@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
 	keywordsOptions: any;
 
 	titleField: FormlyFieldConfig;
+  noteField: FormlyFieldConfig;
 	iptcField: FormlyFieldConfig;
 	keywordsField: FormlyFieldConfig;
 
@@ -58,6 +59,7 @@ export class AppComponent implements OnInit {
             en: 'This is an English Title',
             fr: 'This is a French Title'
           },
+          note: 'Test note',
           iptc: [ 2 ],
           keywords: {
             en: ['Default IPTC keyword'],
@@ -128,7 +130,7 @@ export class AppComponent implements OnInit {
 			key: `keywords.${lang}`,
 			type: 'selectize',
 			templateOptions: {
-				label: 'Keywords',
+				label: 'Keywords (multi)',
 				placeholder: 'Keywords',
 				selectizeClassName: 'selectize-sm',
 				config: {
@@ -150,7 +152,7 @@ export class AppComponent implements OnInit {
 				},
 				value: this.model && this.model.keywords && this.model.keywords[lang],
 				options: this.keywordsOptions[lang],
-				// required: true,
+				required: true,
 			},
 		};
 
@@ -159,7 +161,7 @@ export class AppComponent implements OnInit {
       key: `title.${lang}`,
       type: 'input-horizontal',
       templateOptions: {
-        label: 'Title',
+        label: 'Title (multi)',
         placeholder: 'Title',
         inputClassName: 'form-control-sm',
         required: true,
@@ -169,7 +171,20 @@ export class AppComponent implements OnInit {
 	}
 
 	initSimpleFields() {
-		this.iptcField = {
+    this.noteField = {
+      id: 'note',
+      key: 'note',
+      type: 'input-horizontal',
+      templateOptions: {
+        label: 'Note',
+        placeholder: 'Note',
+        inputClassName: 'form-control-sm',
+        required: true,
+      },
+      expressionProperties: { }
+    };
+
+    this.iptcField = {
 			key: 'iptc',
 			type: 'selectize',
 			templateOptions: {
@@ -295,6 +310,7 @@ export class AppComponent implements OnInit {
 
 		const fields = [
 			this.titleField,
+			this.noteField,
 			this.buildFieldGroup('test', [
 			  this.iptcField,
         this.keywordsField

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Http } from '@angular/http';
 
 import * as _ from 'lodash';
@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormlyFieldConfig } from 'ng-formly';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-root',
@@ -34,15 +35,8 @@ export class AppComponent implements OnInit {
 	constructor(private http: Http, private formBuilder: FormBuilder) { }
 
 	ngOnInit() {
-		  this.form = this.formBuilder.group({
-				// title: new FormControl(),
-				// iptc: new FormControl(),
-				// keywords: this.formBuilder.group({
-				// 	en: [],
-				// 	fr: [],
-				// 	de: [],
-				// })
-			});
+
+		  this.form = this.formBuilder.group({});
 
 			this.selectedLang = 'en';
 
@@ -50,7 +44,7 @@ export class AppComponent implements OnInit {
 				en: [ { item: 'Default IPTC keyword'}],
 				fr: [ { item: 'Manual keyword'}],
 				de: [ ]
-			}
+			};
 
 			this.initData();
 
@@ -58,7 +52,22 @@ export class AppComponent implements OnInit {
 
 			this.getFields();
 
-			// setTimeout(() => this.form.setValue(this.model));
+			setTimeout(() => {
+        this.model = {
+          title: {
+            en: 'English Title',
+            fr: 'French Title'
+          },
+          iptc: [ 2 ],
+          keywords: {
+            en: ['Default IPTC keyword'],
+            fr: ['Manual keyword'],
+            de: []
+          }
+        };
+
+			  // this.form.setValue(model);
+			});
 	}
 
 	initData() {
@@ -96,19 +105,17 @@ export class AppComponent implements OnInit {
 			{ code: 'de', label: 'German' },
 		];
 
-		this.model = {
-			title: {
-				en: 'English Title',
-				fr: 'French Title'
-			},
-			iptc: [ 2 ],
-			keywords: {
-				en: ['Default keyword'],
-				fr: ['Manual keyword'],
-				de: []
-			}
-		};
 	}
+
+	addControl(formGroup: AbstractControl, control: string) {
+	  if(!formGroup) {
+	    return;
+    }
+
+    if(!formGroup.get(control)) {
+      (<FormGroup> formGroup).addControl(control, new FormControl());
+    }
+  }
 
 	initFormlyFields(lang: string) {
 		this.initMultilangFields(lang);
@@ -120,7 +127,6 @@ export class AppComponent implements OnInit {
 			id: 'keywords',
 			key: `keywords.${lang}`,
 			type: 'selectize',
-			className: 'col',
 			templateOptions: {
 				label: 'Keywords',
 				placeholder: 'Keywords',
@@ -142,7 +148,7 @@ export class AppComponent implements OnInit {
 					searchField: ['item'],
 					plugins: [ 'remove_button' ],
 				},
-				value: this.model.keywords && this.model.keywords[lang],
+				value: this.model && this.model.keywords && this.model.keywords[lang],
 				options: this.keywordsOptions[lang],
 				required: true,
 			},
@@ -166,14 +172,12 @@ export class AppComponent implements OnInit {
 		this.iptcField = {
 			key: 'iptc',
 			type: 'selectize',
-			className: 'col',
 			templateOptions: {
 				label: 'IPTC',
 				placeholder: 'IPTC',
 				selectizeClassName: 'selectize-sm',
-				options: this.iptcData,
 				config: {
-					options: [],
+          options: this.iptcData,
 					valueField: 'id',
 					labelField: 'label',
 					searchField: 'label',
@@ -181,7 +185,7 @@ export class AppComponent implements OnInit {
 					create: false,
 					persist: false,
 					plugins: [ 'remove_button' ],
-					value: this.model.iptc,
+					value: this.model && this.model.iptc,
 					onItemAdd: (item) => {
 						this.onChangeIPTC(item, (keywords, iptcKeywords, lang) => {
 							// transform IPTC keywords to options and add them to the keywords options
@@ -218,23 +222,27 @@ export class AppComponent implements OnInit {
 		const iptcKeywords = iptcItem.keywords || {};
 
 		// Creating a new keywords object with the existing keywords
-		// const keywords = Object.assign({}, this.model.keywords);
 
 		// For each IPTC keywords lang
 		for(let lang in iptcKeywords) {
 
-			// // Init form control
-			if(!this.form.get('keywords').get(lang)) {
-				(<FormGroup> this.form.get('keywords')).addControl(lang, new FormControl());
-			}
+			this.addControl(this.form.get('keywords'), lang);
 
 			// Call add or remove method
 			method(this.model.keywords, iptcKeywords, lang);
 
 		}
 
+    for(let lang in this.model.keywords) {
+      this.addControl(this.form.get('keywords'), lang);
+    }
+
+    const keywords = Object.assign({}, this.model.keywords);
+
 		// Creating form model with the existing model and the new keywords
-		this.form.get('keywords').setValue(this.model.keywords);
+		// this.form.get('keywords').setValue(this.model.keywords);
+		this.form.patchValue({ keywords: keywords })
+
 	}
 
 	/**
@@ -255,7 +263,7 @@ export class AppComponent implements OnInit {
 			target[lang] = [];
 		}
 
-		target[lang].push(...keywords);
+		target[lang].push(..._.difference(keywords, target[lang]));
 	}
 
 	/**
@@ -265,6 +273,7 @@ export class AppComponent implements OnInit {
 	 * @param lang
 	 */
 	private removeKeywords(target: any, origin: any, lang: string): void {
+	  console.log('remove');
 		if(!target || !origin || !lang) {
 			return;
 		}
@@ -288,7 +297,7 @@ export class AppComponent implements OnInit {
 			this.keywordsField
 		];
 
-		this.fields = fields;
+    this.fields = fields;
 	}
 
 	onChangeLang(payload: NgbTabChangeEvent): void {
@@ -301,7 +310,7 @@ export class AppComponent implements OnInit {
 
 
     // setTimeout(() => this.model = model);
-    // this.form.patchValue(model);
+    // this.form.patchValue(this.model);
   }
 
   submit(model) {

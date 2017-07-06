@@ -13,10 +13,11 @@
 	</div>
 
 	<!-- <form class="formly" role="form" novalidate [formGroup]="form" (ngSubmit)="submit(model)"> -->
-		<formly-form [model]="model" [fields]="fields" [form]=form>
+		<formly-form [form]="form" [fields]="fields" [model]="model" >
 		</formly-form>
 	<!-- </form> -->
-	<button class="btn btn-sm btn-secondary" (click)="submit(model, form, eventFields)">Submit</button>
+
+	<button class="btn btn-sm btn-secondary" (click)="submit(model, form, fields)">Submit</button>
 
 <!-- <br>
 	<ng-selector name="selector" [(ngModel)]="selected" [options]="values"></ng-selector>
@@ -29,4 +30,24 @@
 <br>
 <br>
 <ng-selectize [config]="config"></ng-selectize> -->
+
+  <div class="row">
+
+    <!--<div class="col">-->
+      <!--<div class="card mt-3" style="font-size: 10px;">-->
+        <!--<div class="card-block p-1">-->
+          <!--<pre class="mb-0">{{ this.model | json }}</pre>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="col">-->
+      <!--<div class="card mt-3" style="font-size: 10px;">-->
+        <!--<div class="card-block p-1">-->
+          <!--<pre class="mb-0">{{ this.form.value | json }}</pre>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+  </div>
 </div>

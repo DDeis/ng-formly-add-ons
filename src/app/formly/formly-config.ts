@@ -40,13 +40,10 @@ export const formlyConfig = {
   ],
   validators: [{ name: 'required', validation: Validators.required}],
   validationMessages: [
-    { name: 'required', message: (err, field) => `${field.templateOptions.label} is required.`},
+    { name: 'required', message: getRequiredValidationMessage },
     { name: 'invalidEmailAddress', message: 'Invalid Email Address' },
     { name: 'maxlength', message: 'Maximum Length Exceeded.' },
-    {
-      name: 'minlength',
-      message: (err) => `Should have at least ${err.requiredLength} Characters`
-    },
+    { name: 'minlength', message: getMinLengthValidationMessage },
     { name: 'not_matching', message: 'Password Not Matching' },
     { name: 'zipCode', message: 'ZIP code should be 5 characters'},
     { name: 'uniqueUsername', message: 'This username is already taken.'},
@@ -69,3 +66,11 @@ export const formlyConfig = {
     { name: 'label', component: FormlyLabelWrapper },
   ],
 };
+
+function getRequiredValidationMessage(err, field): string {
+  return `${field.templateOptions.label} is required.`;
+}
+
+function getMinLengthValidationMessage(err): string {
+  return `Should have at least ${err.requiredLength} Characters`;
+}

@@ -55,8 +55,8 @@ export class AppComponent implements OnInit {
 			setTimeout(() => {
         this.model = {
           title: {
-            en: 'English Title',
-            fr: 'French Title'
+            en: 'This is an English Title',
+            fr: 'This is a French Title'
           },
           iptc: [ 2 ],
           keywords: {
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit {
 				},
 				value: this.model && this.model.keywords && this.model.keywords[lang],
 				options: this.keywordsOptions[lang],
-				required: true,
+				// required: true,
 			},
 		};
 
@@ -160,9 +160,9 @@ export class AppComponent implements OnInit {
       type: 'input-horizontal',
       templateOptions: {
         label: 'Title',
-        placeholder: 'Event Title',
+        placeholder: 'Title',
         inputClassName: 'form-control-sm',
-        required: true,
+        // required: true,
       },
       expressionProperties: { }
     };
@@ -204,7 +204,7 @@ export class AppComponent implements OnInit {
 
 					},
 				},
-				required: true,
+				// required: true,
 			}
 		};
 	}

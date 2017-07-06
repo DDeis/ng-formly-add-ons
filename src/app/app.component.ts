@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
-import { FormlyFieldConfig } from 'ng-formly';
+import { FormlyFieldConfig, FormlyForm } from 'ng-formly';
 import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
@@ -17,6 +17,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class AppComponent implements OnInit {
 
 	@ViewChild('langTabs') langTabs: NgbTabset;
+  @ViewChild('formly') formly: FormlyForm;
 
   form: FormGroup;
 	model: any;
@@ -156,7 +157,11 @@ export class AppComponent implements OnInit {
 			},
 		};
 
-		this.titleField = {
+	}
+
+	initSimpleFields() {
+
+    this.titleField = {
       id: 'title',
       type: 'multilang-field',
       templateOptions: {
@@ -164,6 +169,10 @@ export class AppComponent implements OnInit {
         label: 'Title (multi)',
         languages: this.languages,
         selectedLang: this.selectedLang,
+        hideExpression: (lang) => {
+          console.log('hide', lang, this.selectedLang);
+          return lang !== this.selectedLang;
+        },
       },
       fieldGroup: [{
         type: 'input',
@@ -174,9 +183,7 @@ export class AppComponent implements OnInit {
         },
       }],
     };
-	}
 
-	initSimpleFields() {
     this.noteField = {
       id: 'note',
       key: 'note',
@@ -350,6 +357,9 @@ export class AppComponent implements OnInit {
 		this.initMultilangFields(this.selectedLang);
 		this.getFields();
 
+		// this.titleField.component.setSelectedLang(this.selectedLang);
+    console.log('title component', this.titleField);
+    console.log('form', this.formly);
 
     // this.form.setValue(model);
     setTimeout(() => this.model = model);

@@ -12,21 +12,25 @@ import { FieldType, FormlyFieldConfig } from 'ng-formly';
 export class FormlyMultilangField extends FieldType implements OnInit {
 
   fields: FormlyFieldConfig[];
+  selectedlang;
 
   get control() {
     return this.form.get(this.to.key);
-  }
-
-  get selectedlang(): string {
-    return this.to.selectedLang;
   }
 
   get newOptions() {
     return { ...this.options };
   }
 
+  setSelectedLang(lang) {
+
+    this.selectedlang = lang;
+  }
+
   ngOnInit() {
     (<FormGroup> this.form).addControl(this.to.key, new FormGroup({}));
+
+    this.selectedlang = this.to.selectedLang;
 
     const control = <FormGroup> this.form.get(this.to.key);
 
@@ -37,7 +41,7 @@ export class FormlyMultilangField extends FieldType implements OnInit {
 
       const newField = Object.assign({}, this.field.fieldGroup[0], {
         key: lang.code,
-        hideExpression: () => this.selectedlang !== lang.code,
+        hideExpression: () => this.to.hideExpression(lang.code),
       });
 
       fields.push(newField);

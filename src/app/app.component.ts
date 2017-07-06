@@ -54,21 +54,22 @@ export class AppComponent implements OnInit {
 
 			this.getFields();
 
-			setTimeout(() => {
-        this.model = {
-          title: {
-            en: 'This is an English Title',
-            fr: 'This is a French Title',
-          },
-          note: 'Test note',
-          iptc: [ 2 ],
-          keywords: {
-            en: ['Default IPTC keyword'],
-            fr: ['Manual keyword'],
-            de: []
-          }
-        };
+			const model = {
+				title: {
+					en: 'This is an English Title',
+					fr: 'This is a French Title',
+				},
+				note: 'Test note',
+				iptc: [ 2 ],
+				keywords: {
+					en: ['Default IPTC keyword'],
+					fr: ['Manual keyword'],
+					de: []
+				}
+			};
 
+			setTimeout(() => {
+				this.model = model;
 			  // this.form.setValue(model);
 			});
 	}
@@ -166,28 +167,27 @@ export class AppComponent implements OnInit {
       type: 'multilang-field',
       templateOptions: {
         key: 'title',
-        label: 'Title (multi)',
         languages: this.languages,
         selectedLang: this.selectedLang,
-        hideExpression: (lang) => {
-          console.log('hide', lang, this.selectedLang);
-          return lang !== this.selectedLang;
-        },
+				multilangField: {
+	        type: 'input',
+	        templateOptions: {
+	          label: 'Title (multi)',
+	          placeholder: 'Title',
+	          inputClassName: 'form-control-sm',
+	          required: true,
+	        },
+	      },
+        hideExpression: (lang) => { return lang !== this.selectedLang; },
       },
-      fieldGroup: [{
-        type: 'input',
-        templateOptions: {
-          placeholder: 'Title',
-          inputClassName: 'form-control-sm',
-          required: true,
-        },
-      }],
+      fieldGroup: [],
     };
 
     this.noteField = {
       id: 'note',
       key: 'note',
-      type: 'input-horizontal',
+      type: 'input',
+			className: 'col',
       templateOptions: {
         label: 'Note',
         placeholder: 'Note',
@@ -321,7 +321,13 @@ export class AppComponent implements OnInit {
 	getFields() {
 		const fields = [
 			this.titleField,
-      // this.noteField,
+			// {
+			// 	fieldGroupClassName: 'row',
+			// 	fieldGroup: [
+			// 		this.noteField,
+			// 	],
+			// },
+
       // this.buildFieldGroup('test', [
 			 //  this.iptcField,
       //   this.keywordsField
@@ -357,12 +363,11 @@ export class AppComponent implements OnInit {
 		this.initMultilangFields(this.selectedLang);
 		this.getFields();
 
-		// this.titleField.component.setSelectedLang(this.selectedLang);
-    console.log('title component', this.titleField);
-    console.log('form', this.formly);
-
     // this.form.setValue(model);
-    setTimeout(() => this.model = model);
+    setTimeout(() => {
+			this.model = model
+			// this.form.setValue(model);
+		});
   }
 
   submit(model) {

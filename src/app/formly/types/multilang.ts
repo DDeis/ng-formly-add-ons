@@ -23,7 +23,6 @@ export class FormlyMultilangField extends FieldType implements OnInit {
   }
 
   setSelectedLang(lang) {
-
     this.selectedlang = lang;
   }
 
@@ -39,7 +38,7 @@ export class FormlyMultilangField extends FieldType implements OnInit {
     this.to.languages.forEach(lang => {
       control.addControl(lang.code, new FormControl(undefined));
 
-      const newField = Object.assign({}, this.field.fieldGroup[0], {
+      const newField = Object.assign({}, this.to.multilangField, {
         key: lang.code,
         hideExpression: () => this.to.hideExpression(lang.code),
       });

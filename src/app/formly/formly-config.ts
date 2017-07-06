@@ -58,10 +58,10 @@ export const formlyConfig = {
   ],
 };
 
-function getRequiredValidationMessage(err, field): string {
+export function getRequiredValidationMessage(err, field): string {
   return `${field.templateOptions.label} is required.`;
 }
 
-function getMinLengthValidationMessage(err): string {
+export function getMinLengthValidationMessage(err): string {
   return `Should have at least ${err.requiredLength} Characters`;
 }

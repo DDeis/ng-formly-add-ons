@@ -306,8 +306,6 @@ export class AppComponent implements OnInit {
 	}
 
 	getFields() {
-	  const model = Object.assign({}, this.model);
-
 		const fields = [
 			this.titleField,
 			this.noteField,
@@ -318,9 +316,6 @@ export class AppComponent implements OnInit {
 		];
 
     this.fields = fields;
-
-    // this.model = model;
-    // setTimeout(() => this.model = model);
 	}
 
   buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
@@ -344,18 +339,18 @@ export class AppComponent implements OnInit {
 	onChangeLang(payload: NgbTabChangeEvent): void {
     this.selectedLang = payload.nextId;
 
-    const model = Object.assign({}, this.model);
+    const model = Object.assign({}, this.form.value);
 
 		this.initMultilangFields(this.selectedLang);
 		this.getFields();
 
 
+    // this.form.setValue(model);
     setTimeout(() => this.model = model);
-    // this.form.patchValue(this.model);
   }
 
   submit(model) {
-    console.log(model);
+    console.log(model, this.form.value);
   }
 
 }

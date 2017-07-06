@@ -162,7 +162,7 @@ export class AppComponent implements OnInit {
         label: 'Title',
         placeholder: 'Title',
         inputClassName: 'form-control-sm',
-        // required: true,
+        required: true,
       },
       expressionProperties: { }
     };
@@ -204,7 +204,7 @@ export class AppComponent implements OnInit {
 
 					},
 				},
-				// required: true,
+				required: true,
 			}
 		};
 	}
@@ -291,25 +291,50 @@ export class AppComponent implements OnInit {
 	}
 
 	getFields() {
+	  const model = Object.assign({}, this.model);
+
 		const fields = [
 			this.titleField,
-			this.iptcField,
-			this.keywordsField
+			this.buildFieldGroup('test', [
+			  this.iptcField,
+        this.keywordsField
+      ]),
 		];
 
     this.fields = fields;
+
+    // this.model = model;
+    // setTimeout(() => this.model = model);
 	}
+
+  buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
+
+    // Apply 'col' class or specified class
+    fields.forEach((field, index) => {
+      field.className = options && options.fieldClassNames
+        ? options.fieldClassNames[index]
+        : 'col';
+    });
+
+    const group = {
+      id: id,
+      fieldGroupClassName: 'row',
+      fieldGroup: fields
+    };
+
+    return group;
+  }
 
 	onChangeLang(payload: NgbTabChangeEvent): void {
     this.selectedLang = payload.nextId;
 
-    // const model = Object.assign({}, this.model);
+    const model = Object.assign({}, this.model);
 
 		this.initMultilangFields(this.selectedLang);
 		this.getFields();
 
 
-    // setTimeout(() => this.model = model);
+    setTimeout(() => this.model = model);
     // this.form.patchValue(this.model);
   }
 

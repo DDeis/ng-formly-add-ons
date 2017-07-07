@@ -38,40 +38,40 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 
-		  this.form = this.formBuilder.group({});
+    this.form = this.formBuilder.group({});
 
-			this.selectedLang = 'en';
+    this.selectedLang = 'en';
 
-			this.keywordsOptions = {
-				en: [ { item: 'Default IPTC keyword'}],
-				fr: [ { item: 'Manual keyword'}],
-				de: [ ]
-			};
+    this.keywordsOptions = {
+      en: [ { item: 'Default IPTC keyword'}],
+      fr: [ { item: 'Manual keyword'}],
+      de: [ ]
+    };
 
-			this.initData();
+    this.initData();
 
-			this.initFormlyFields(this.selectedLang);
+    this.initFormlyFields(this.selectedLang);
 
-			this.getFields();
+    this.getFields();
 
-			const model = {
-				title: {
-					en: 'This is an English Title',
-					fr: 'This is a French Title',
-				},
-				note: 'Test note',
-				iptc: [ 2 ],
-				keywords: {
-					en: ['Default IPTC keyword'],
-					fr: ['Manual keyword'],
-					de: []
-				}
-			};
+    const model = {
+      title: {
+        en: 'This is an English Title',
+        fr: 'This is a French Title',
+      },
+      note: 'Test note',
+      iptc: [ 2 ],
+      keywords: {
+        en: ['Default IPTC keyword'],
+        fr: ['Manual keyword'],
+        de: []
+      }
+    };
 
-			setTimeout(() => {
-				this.model = model;
-			  // this.form.setValue(model);
-			});
+    setTimeout(() => {
+      this.model = model;
+    });
+
 	}
 
 	initData() {
@@ -335,6 +335,7 @@ export class AppComponent implements OnInit {
 		];
 
     this.fields = fields;
+
 	}
 
   buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
@@ -358,16 +359,18 @@ export class AppComponent implements OnInit {
 	onChangeLang(payload: NgbTabChangeEvent): void {
     this.selectedLang = payload.nextId;
 
-    const model = Object.assign({}, this.form.value);
+    // const model = Object.assign(this.model, this.form.value);
 
 		this.initMultilangFields(this.selectedLang);
 		this.getFields();
 
-    // this.form.setValue(model);
-    setTimeout(() => {
-			this.model = model
-			// this.form.setValue(model);
-		});
+
+    	// this.model = model
+		// this.form.setValue(model);
+		// setTimeout(() => {
+		// 	this.model = model
+		// 	// this.form.setValue(model);
+		// });
   }
 
   submit(model) {

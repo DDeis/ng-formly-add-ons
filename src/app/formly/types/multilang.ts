@@ -5,17 +5,25 @@ import { FieldType, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
 @Component({
   selector: 'formly-multilang-field',
   template: `
-    <!--[model]="model"-->
-    <formly-form [model]="model" [fields]="fields" [form]="control" [options]="newOptions" [buildForm]="false"></formly-form>
+    <!--<div *ngFor="let control of controls; let i = index;">-->
+      <formly-form [model]="model" [fields]="fields" [form]="control" [options]="newOptions" [buildForm]="false"></formly-form>
+    <!--</div>-->
   `,
 })
 export class FormlyMultilangField extends FieldType implements OnInit {
 
   fields: FormlyFieldConfig[];
-  selectedlang;
+
+  // get controls() {
+  //   const controls = this.form.get(this.to.key)['controls']
+  //
+  //   return controls;
+  // }
 
   get control() {
-    return this.form.get(this.to.key);
+    const control = this.form.get(this.to.key);
+
+    return control;
   }
 
   get newOptions() {
@@ -29,21 +37,26 @@ export class FormlyMultilangField extends FieldType implements OnInit {
   ngOnInit() {
     (<FormGroup> this.form).addControl(this.to.key, new FormGroup({}));
 
-    this.selectedlang = this.to.selectedLang;
+    const fields = this.buildMultilangField(this.to.key, this.to.field, this.to.languages);
 
-    const control = <FormGroup> this.form.get(this.to.key);
+    this.fields = fields;
+  }
+
+  private buildMultilangField(multilangFieldKey: string, baseField: FormlyFieldConfig, languages: any[]): FormlyFieldConfig[] {
 
     const fields = [];
 
+    const control = <FormGroup> this.form.get(multilangFieldKey);
+
     // Add config component and wrappers to field
-    this.formlyConfig.getMergedField(this.to.field)
+    this.formlyConfig.getMergedField(baseField);
 
     // For each lang create a new field and FormControl
-    this.to.languages.forEach(lang => {
+    languages.forEach(lang => {
 
       const newField = Object.assign(
         {},
-        this.to.field,
+        baseField,
         {
           key: lang.code,
           hideExpression: () => this.to.hideExpression(lang.code),
@@ -54,9 +67,6 @@ export class FormlyMultilangField extends FieldType implements OnInit {
       fields.push(newField);
     });
 
-    this.model;
-    debugger;
-
-    this.fields = fields;
+    return fields;
   }
 }

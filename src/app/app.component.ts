@@ -48,11 +48,6 @@ export class AppComponent implements OnInit {
       de: [ ]
     };
 
-    this.initData();
-
-    this.initFormlyFields(this.selectedLang);
-
-    this.getFields();
 
     const model = {
       title: {
@@ -68,9 +63,14 @@ export class AppComponent implements OnInit {
       }
     };
 
-    setTimeout(() => {
-      this.model = model;
-    });
+    this.model = model;
+
+    this.initData();
+
+    this.initFormlyFields(this.selectedLang);
+
+    this.getFields();
+
 
 	}
 
@@ -160,17 +160,52 @@ export class AppComponent implements OnInit {
 
 	}
 
+  private buildMultilangField(key: string, baseField, languages: any[]): FormlyFieldConfig {
+
+
+	  const field: FormlyFieldConfig = {
+	    key: key,
+      fieldGroup: [ ]
+    };
+
+	  languages.forEach(lang => {
+      const newField = Object.assign(
+        {},
+        baseField,
+        {
+          key: lang.code,
+          hideExpression: () => lang.code !== this.selectedLang,
+        });
+
+      field.fieldGroup.push(newField);
+    });
+
+    return field;
+  }
+
 	initSimpleFields() {
+
+	  // this.titleField = this.buildMultilangField('title',
+     //  {
+     //    type: 'input',
+     //    templateOptions: {
+     //      label: 'Title (multi)',
+     //      placeholder: 'Title',
+     //      inputClassName: 'form-control-sm',
+     //      required: true,
+     //    },
+     //  },
+     //  this.languages);
 
     this.titleField = {
       id: 'title',
       type: 'multilang-field',
       templateOptions: {
-        key: 'title',
+        multilangKey: 'title',
         languages: this.languages,
         selectedLang: this.selectedLang,
 				field: {
-	        type: 'input-horizontal',
+	        type: 'input',
 	        templateOptions: {
 	          label: 'Title (multi)',
 	          placeholder: 'Title',
@@ -180,7 +215,8 @@ export class AppComponent implements OnInit {
 	      },
         hideExpression: (lang) => { return lang !== this.selectedLang; },
       },
-      // fieldGroup: [],
+      fieldGroup: [],
+      formControl: new FormGroup({}),
     };
 
     this.noteField = {

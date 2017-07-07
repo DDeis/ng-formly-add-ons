@@ -1,33 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
+
 import { FieldType, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
 
 @Component({
   selector: 'formly-multilang-field',
   template: `
-    <!--<div *ngFor="let control of controls; let i = index;">-->
-      <formly-form [model]="model" [fields]="fields" [form]="control" [options]="newOptions" [buildForm]="false"></formly-form>
-    <!--</div>-->
+      <formly-form [fields]="fields" 
+                   [model]="model" 
+                   [form]="formlyGroup" 
+                   [options]="newOptions" 
+                   [buildForm]="true">
+      </formly-form>
   `,
 })
 export class FormlyMultilangField extends FieldType implements OnInit {
 
-  fields: FormlyFieldConfig[];
-
-  // get controls() {
-  //   const controls = this.form.get(this.to.key)['controls']
-  //
-  //   return controls;
-  // }
-
-  get control() {
-    const control = this.form.get(this.to.key);
-
-    return control;
-  }
+  fields;
 
   get newOptions() {
     return { ...this.options };
+  }
+
+  get formlyGroup(): AbstractControl {
+    if (this.field.formControl) {
+      return this.field.formControl;
+    } else {
+      return this.form;
+    }
   }
 
   constructor(private formlyConfig: FormlyConfig) {
@@ -35,21 +35,19 @@ export class FormlyMultilangField extends FieldType implements OnInit {
   }
 
   ngOnInit() {
-    (<FormGroup> this.form).addControl(this.to.key, new FormGroup({}));
-
-    const fields = this.buildMultilangField(this.to.key, this.to.field, this.to.languages);
-
-    this.fields = fields;
+    console.log(this.form, this.field.formControl);
+    this.buildMultilangField(this.to.multilangKey, this.to.field, this.to.languages);
   }
 
-  private buildMultilangField(multilangFieldKey: string, baseField: FormlyFieldConfig, languages: any[]): FormlyFieldConfig[] {
+  private buildMultilangField(multilangFieldKey: string, baseField: FormlyFieldConfig, languages: any[]): void {
 
-    const fields = [];
-
-    const control = <FormGroup> this.form.get(multilangFieldKey);
+    const field = {
+      key: multilangFieldKey,
+      fieldGroup: [],
+    };
 
     // Add config component and wrappers to field
-    this.formlyConfig.getMergedField(baseField);
+    // this.formlyConfig.getMergedField(baseField);
 
     // For each lang create a new field and FormControl
     languages.forEach(lang => {
@@ -61,12 +59,9 @@ export class FormlyMultilangField extends FieldType implements OnInit {
           key: lang.code,
           hideExpression: () => this.to.hideExpression(lang.code),
         });
-
-      control.addControl(lang.code, new FormControl(undefined));
-
-      fields.push(newField);
+      field.fieldGroup.push(newField);
     });
 
-    return fields;
+    this.fields = [ field ];
   }
 }

@@ -13,7 +13,17 @@ import { FormlyLabelWrapper } from './wrappers/label.wrapper';
 
 import { Validators } from '@angular/forms';
 
-export const formlyConfig = {
+import { ConfigOption } from 'ng-formly';
+
+export const CUSTOM_FIELD_TYPE_COMPONENTS = [
+  FormlyHorizontalWrapper, FormlyPanelWrapper, FormlyLabelWrapper,
+
+  FormlyFieldInput, FormlyFieldTextArea, FormlyFieldSelect, FormlyFieldRadio,
+  FormlyFieldSelectize,
+  FormlyRepeatSection, FormlyMultilangField,
+];
+
+export const CUSTOM_FORMLY_CONFIG: ConfigOption  = {
   types: [
     { name: 'input', component: FormlyFieldInput },
     { name: 'textarea', component: FormlyFieldTextArea },

@@ -5,21 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { FormlyModule, FormlyBootstrapModule } from 'ng-formly';
 import { NgSelectizeModule } from 'ng-selectize';
 
-import { FormlyFieldInput } from './types/input';
-import { FormlyFieldTextArea } from './types/textarea';
-import { FormlyFieldSelect } from './types/select';
-import { FormlyFieldRadio } from './types/radio';
-import { FormlyFieldSelectize } from './types/selectize';
-
-import { FormlyRepeatSection } from './types/repeat-section';
-import { FormlyMultilangField } from './types/multilang';
-
-import { FormlyHorizontalWrapper } from './wrappers/horizontal.wrapper';
-import { FormlyPanelWrapper } from './wrappers/panel.wrapper';
-import { FormlyLabelWrapper } from './wrappers/label.wrapper';
-
-import { formlyConfig } from './formly-config';
-
+import { CUSTOM_FORMLY_CONFIG, CUSTOM_FIELD_TYPE_COMPONENTS } from './formly-config';
 
 @NgModule({
   imports: [
@@ -28,14 +14,11 @@ import { formlyConfig } from './formly-config';
 
     NgSelectizeModule,
 
-    FormlyModule.forRoot(formlyConfig),
+    FormlyModule.forRoot(CUSTOM_FORMLY_CONFIG),
     FormlyBootstrapModule,
   ],
   declarations: [
-    FormlyHorizontalWrapper, FormlyPanelWrapper, FormlyLabelWrapper,
-    FormlyFieldInput, FormlyFieldTextArea, FormlyFieldSelect, FormlyFieldRadio,
-    FormlyFieldSelectize,
-    FormlyRepeatSection, FormlyMultilangField,
+    ...CUSTOM_FIELD_TYPE_COMPONENTS,
   ],
   exports: [ FormlyModule, FormlyBootstrapModule ]
 })

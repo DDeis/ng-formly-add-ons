@@ -169,8 +169,8 @@ export class AppComponent implements OnInit {
         key: 'title',
         languages: this.languages,
         selectedLang: this.selectedLang,
-				multilangField: {
-	        type: 'input',
+				field: {
+	        type: 'input-horizontal',
 	        templateOptions: {
 	          label: 'Title (multi)',
 	          placeholder: 'Title',
@@ -180,7 +180,7 @@ export class AppComponent implements OnInit {
 	      },
         hideExpression: (lang) => { return lang !== this.selectedLang; },
       },
-      fieldGroup: [],
+      // fieldGroup: [],
     };
 
     this.noteField = {

@@ -52,7 +52,7 @@ export class FormlyMultilangField extends FieldType implements OnInit {
         {},
         _.cloneDeep(baseField),
         {
-          // id: `${multilangFieldKey}-${lang.code}`,
+          id: `${multilangFieldKey}-${lang.code}`,
           key: lang.code,
           hideExpression: () => this.to.hideExpression(lang.code),
         });

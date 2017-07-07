@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
+import * as _ from 'lodash';
+
 import { FieldType, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
 
 @Component({
@@ -45,19 +47,27 @@ export class FormlyMultilangField extends FieldType implements OnInit {
       fieldGroup: [],
     };
 
-    // Add config component and wrappers to field
-    // this.formlyConfig.getMergedField(baseField);
-
-    // For each lang create a new field and FormControl
     languages.forEach(lang => {
-
-      const newField = Object.assign(
+      const newField: FormlyFieldConfig = Object.assign(
         {},
-        baseField,
+        _.cloneDeep(baseField),
         {
+          // id: `${multilangFieldKey}-${lang.code}`,
           key: lang.code,
           hideExpression: () => this.to.hideExpression(lang.code),
         });
+
+
+      newField.templateOptions.label = `${newField.templateOptions.label} ${lang.code}`;
+
+      if(this.model) {
+        newField.templateOptions.value = this.model[lang.code];
+      }
+
+      if(newField.templateOptions.fetchSelectizeOptions) {
+        newField.templateOptions.options = newField.templateOptions.fetchSelectizeOptions(lang.code);
+      }
+
       field.fieldGroup.push(newField);
     });
 

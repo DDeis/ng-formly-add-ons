@@ -35,7 +35,6 @@ export class FormlyMultilangField extends FieldType implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.form, this.field.formControl);
     this.buildMultilangField(this.to.multilangKey, this.to.field, this.to.languages);
   }
 

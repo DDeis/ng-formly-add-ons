@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormlyFieldConfig, FormlyForm } from 'ng-formly';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-root',
@@ -110,18 +111,86 @@ export class AppComponent implements OnInit {
 
 	}
 
-  // addControl(formGroup: AbstractControl, control: string) {
-	 //  if(!formGroup) {
-	 //    return;
-  //   }
-  //
-  //   if(!formGroup.get(control)) {
-  //     (<FormGroup> formGroup).addControl(control, new FormControl());
-  //   }
-  // }
+	addControl(formGroup: AbstractControl, control: string) {
+	  if(!formGroup) {
+	    return;
+    }
+
+    if(!formGroup.get(control)) {
+      (<FormGroup> formGroup).addControl(control, new FormControl());
+    }
+  }
 
 	initFormlyFields(lang: string) {
-		this.initFields();
+		this.initMultilangFields(lang);
+		this.initSimpleFields();
+	}
+
+	initMultilangFields(lang: string) {
+	  this.keywordsField = this.buildMultilangField('keywords', {
+      type: 'selectize',
+      templateOptions: {
+        label: 'Keywords (multi)',
+        placeholder: 'Keywords',
+        selectizeClassName: 'selectize-sm',
+        config: {
+          maxItems: null,
+          create: (input, callback) => {
+            const option = {item: input};
+
+            if (!this.keywordsOptions[ lang ]) {
+              this.keywordsOptions[ lang ] = [];
+            }
+
+            this.keywordsOptions[ lang ].push(option);
+            callback(option);
+          },
+          labelField: 'item',
+          valueField: 'item',
+          searchField: [ 'item' ],
+          plugins: [ 'remove_button' ],
+        },
+        selectizeOptions: (lang) => this.keywordsOptions[lang],
+
+        // options: this.keywordsOptions[ lang ],
+        required: true,
+      },
+    },
+    this.languages,
+    this.model.keywords);
+
+
+		// this.keywordsField = {
+		// 	id: 'keywords',
+		// 	key: `keywords.${lang}`,
+		// 	type: 'selectize',
+		// 	templateOptions: {
+		// 		label: 'Keywords (multi)',
+		// 		placeholder: 'Keywords',
+		// 		selectizeClassName: 'selectize-sm',
+		// 		config: {
+		// 			maxItems: null,
+		// 			create: (input, callback) => {
+		// 				const option = { item: input };
+		//
+		// 				if(!this.keywordsOptions[lang]) {
+		// 					this.keywordsOptions[lang] = [];
+		// 				}
+		//
+		// 				this.keywordsOptions[lang].push(option);
+		// 				callback(option);
+		// 			},
+		// 			labelField: 'item',
+		// 			valueField: 'item',
+		// 			searchField: ['item'],
+		// 			plugins: [ 'remove_button' ],
+		// 		},
+		// 		value: this.model && this.model.keywords && this.model.keywords[lang],
+		// 		options: this.keywordsOptions[lang],
+		// 		required: true,
+		// 	},
+		// };
+
 	}
 
   private buildMultilangField(key: string, baseField: FormlyFieldConfig, languages: any[], model?: any, options?): FormlyFieldConfig {
@@ -152,8 +221,8 @@ export class AppComponent implements OnInit {
         newField.templateOptions.value = model[lang.code];
       }
 
-      if(newField.templateOptions.fetchSelectizeOptions) {
-        newField.templateOptions.options = newField.templateOptions.fetchSelectizeOptions(lang.code);
+      if(newField.templateOptions.selectizeOptions) {
+        newField.templateOptions.options = newField.templateOptions.selectizeOptions(lang);
       }
 
       field.fieldGroup.push(newField);
@@ -162,7 +231,7 @@ export class AppComponent implements OnInit {
     return field;
   }
 
-	initFields() {
+	initSimpleFields() {
 
 	  this.titleField = this.buildMultilangField('title',
       {
@@ -251,73 +320,6 @@ export class AppComponent implements OnInit {
 				required: true,
 			}
 		};
-
-
-    this.keywordsField = this.buildMultilangField('keywords', {
-        type: 'selectize',
-        templateOptions: {
-          label: 'Keywords (multi)',
-          placeholder: 'Keywords',
-          selectizeClassName: 'selectize-sm',
-          config: {
-            maxItems: null,
-            create: (input, callback) => {
-              const option = {item: input};
-
-              if (!this.keywordsOptions[ this.selectedLang ]) {
-                this.keywordsOptions[ this.selectedLang ] = [];
-              }
-
-              this.keywordsOptions[ this.selectedLang ].push(option);
-              callback(option);
-            },
-            labelField: 'item',
-            valueField: 'item',
-            searchField: [ 'item' ],
-            plugins: [ 'remove_button' ],
-          },
-          fetchSelectizeOptions: (lang) => {
-            console.log('fetch', lang);
-            return this.keywordsOptions[ lang ];
-          },
-          // options: this.keywordsOptions[ lang ],
-          required: true,
-        },
-      },
-      this.languages,
-      this.model.keywords);
-
-
-    // this.keywordsField = {
-    // 	id: 'keywords',
-    // 	key: `keywords.${lang}`,
-    // 	type: 'selectize',
-    // 	templateOptions: {
-    // 		label: 'Keywords (multi)',
-    // 		placeholder: 'Keywords',
-    // 		selectizeClassName: 'selectize-sm',
-    // 		config: {
-    // 			maxItems: null,
-    // 			create: (input, callback) => {
-    // 				const option = { item: input };
-    //
-    // 				if(!this.keywordsOptions[lang]) {
-    // 					this.keywordsOptions[lang] = [];
-    // 				}
-    //
-    // 				this.keywordsOptions[lang].push(option);
-    // 				callback(option);
-    // 			},
-    // 			labelField: 'item',
-    // 			valueField: 'item',
-    // 			searchField: ['item'],
-    // 			plugins: [ 'remove_button' ],
-    // 		},
-    // 		value: this.model && this.model.keywords && this.model.keywords[lang],
-    // 		options: this.keywordsOptions[lang],
-    // 		required: true,
-    // 	},
-    // };
 	}
 
 	/**
@@ -337,16 +339,16 @@ export class AppComponent implements OnInit {
 		// For each IPTC keywords lang
 		for(let lang in iptcKeywords) {
 
-			// this.addControl(this.form.get('keywords'), lang);
+			this.addControl(this.form.get('keywords'), lang);
 
 			// Call add or remove method
 			method(this.model.keywords, iptcKeywords, lang);
 
 		}
 
-    // for(let lang in this.model.keywords) {
-    //   this.addControl(this.form.get('keywords'), lang);
-    // }
+    for(let lang in this.model.keywords) {
+      this.addControl(this.form.get('keywords'), lang);
+    }
 
     const keywords = Object.assign({}, this.model.keywords);
 
@@ -368,16 +370,13 @@ export class AppComponent implements OnInit {
 			return;
 		}
 
-		debugger
-
 		const keywords = map && typeof map === 'function' ? origin[lang].map(map) : origin[lang];
 
 		if(!target[lang]) {
 			target[lang] = [];
 		}
 
-		const keywordsToAdd = _.difference(keywords, target[lang])
-		target[lang].push(...keywordsToAdd);
+		target[lang].push(..._.difference(keywords, target[lang]));
 	}
 
 	/**

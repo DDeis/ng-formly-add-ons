@@ -37,11 +37,11 @@ export class FormlyFieldSelectize extends FieldType {
   }
 
   get noOptionsPlaceholder(): string {
-    return this.to.placeholder || '';
+    return this.to.noOptionsPlaceholder || '';
   }
 
   get hasOptionsPlaceholder(): string {
-    return this.to.placeholder || '';
+    return this.to.hasOptionsPlaceholder || '';
   }
 
   get enabled(): boolean {
@@ -61,7 +61,6 @@ export class FormlyFieldSelectize extends FieldType {
   }
 
   get value() {
-    // return this.formControl.value;
     return this.to.value || null;
   }
 

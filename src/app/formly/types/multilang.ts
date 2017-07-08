@@ -8,10 +8,10 @@ import { FieldType, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
 @Component({
   selector: 'formly-multilang-field',
   template: `
-      <formly-form [fields]="fields" 
-                   [model]="model" 
-                   [form]="formlyGroup" 
-                   [options]="newOptions" 
+      <formly-form [fields]="fields"
+                   [model]="model"
+                   [form]="formlyGroup"
+                   [options]="newOptions"
                    [buildForm]="true">
       </formly-form>
   `,
@@ -54,7 +54,7 @@ export class FormlyMultilangField extends FieldType implements OnInit {
         {
           id: `${multilangFieldKey}-${lang.code}`,
           key: lang.code,
-          hideExpression: () => this.to.hideExpression(lang.code),
+          // hideExpression: () => this.to.hideExpression(lang.code),
         });
 
 
@@ -64,8 +64,10 @@ export class FormlyMultilangField extends FieldType implements OnInit {
         newField.templateOptions.value = this.model[lang.code];
       }
 
-      if(newField.templateOptions.fetchSelectizeOptions) {
-        newField.templateOptions.options = newField.templateOptions.fetchSelectizeOptions(lang.code);
+      if(newField.type === 'selectize') {
+				newField.templateOptions.options = newField.templateOptions.fetchOptions(lang.code);
+				newField.templateOptions.value = newField.templateOptions.fetchValue(lang.code);
+				// debugger
       }
 
       field.fieldGroup.push(newField);

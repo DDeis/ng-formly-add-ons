@@ -41,20 +41,21 @@ export class AppComponent implements OnInit {
 
     this.selectedLang = 'en';
 
-    this.keywordsOptions = {
-      en: [ { item: 'Default IPTC keyword'}],
-      fr: [ { item: 'Manual keyword'}],
-      de: [ ]
-    };
+    this.initData();
+		this.initFields();
+    this.getFields();
 
+	}
+
+	initData() {
 
     const model = {
-      // title: {
-      //   en: 'This is an English Title',
-      //   fr: 'This is a French Title',
-      // },
-      // note: 'Test note',
-      iptc: [ 2 ],
+      title: {
+        en: 'This is an English Title',
+        fr: 'This is a French Title',
+      },
+      note: 'Test note',
+      iptc: [ '2' ],
       keywords: {
         en: ['Default IPTC keyword'],
         fr: ['Manual keyword'],
@@ -64,19 +65,9 @@ export class AppComponent implements OnInit {
 
     this.model = model;
 
-    this.initData();
-
-    this.initFormlyFields(this.selectedLang);
-
-    this.getFields();
-
-
-	}
-
-	initData() {
 		this.iptcData = [
 			{
-				id: 0,
+				id: '0',
 				label: 'IPTC 1',
 				keywords: {
 					en: ['English keyword 1'],
@@ -85,7 +76,7 @@ export class AppComponent implements OnInit {
 				}
 			},
 			{
-				id: 1,
+				id: '1',
 				label: 'IPTC 2',
 				keywords: {
 					en: ['English keyword 3'],
@@ -94,7 +85,7 @@ export class AppComponent implements OnInit {
 				}
 			},
 			{
-				id: 2,
+				id: '2',
 				label: 'Default IPTC',
 				keywords: {
 					en: ['Default IPTC keyword'],
@@ -108,70 +99,14 @@ export class AppComponent implements OnInit {
 			{ code: 'de', label: 'German' },
 		];
 
+		this.keywordsOptions = {
+			en: [ { item: 'Default IPTC keyword'}],
+			fr: [ { item: 'Manual keyword'}],
+			de: [ ]
+		};
 	}
-
-  // addControl(formGroup: AbstractControl, control: string) {
-	 //  if(!formGroup) {
-	 //    return;
-  //   }
-  //
-  //   if(!formGroup.get(control)) {
-  //     (<FormGroup> formGroup).addControl(control, new FormControl());
-  //   }
-  // }
-
-	initFormlyFields(lang: string) {
-		this.initFields();
-	}
-
-  private buildMultilangField(key: string, baseField: FormlyFieldConfig, languages: any[], model?: any, options?): FormlyFieldConfig {
-
-	  const field: FormlyFieldConfig = {
-	    key: key,
-      fieldGroup: [ ]
-    };
-
-	  languages.forEach(lang => {
-      const newField: FormlyFieldConfig = Object.assign(
-        {},
-        _.cloneDeep(baseField),
-        {
-          id: `${key}-${lang.code}`,
-          key: lang.code,
-          // hideExpression: () => lang.code !== this.selectedLang,
-        });
-
-
-      newField.templateOptions.label = `${newField.templateOptions.label} ${lang.code}`;
-
-      if(model) {
-        newField.templateOptions.value = model[lang.code];
-      }
-
-      if(newField.templateOptions.fetchSelectizeOptions) {
-        newField.templateOptions.options = newField.templateOptions.fetchSelectizeOptions(lang.code);
-      }
-
-      field.fieldGroup.push(newField);
-    });
-
-    return field;
-  }
 
 	initFields() {
-
-	  // this.titleField = this.buildMultilangField('title',
-     //  {
-     //    type: 'input',
-     //    templateOptions: {
-     //      label: 'Title (multi)',
-     //      placeholder: 'Title',
-     //      inputClassName: 'form-control-sm',
-     //      required: true,
-     //    },
-     //  },
-     //  this.languages,
-     //  this.model.keywords);
 
     this.titleField = {
       id: 'title',
@@ -217,7 +152,6 @@ export class AppComponent implements OnInit {
 				placeholder: 'IPTC',
 				selectizeClassName: 'selectize-sm',
 				config: {
-          options: this.iptcData,
 					valueField: 'id',
 					labelField: 'label',
 					searchField: 'label',
@@ -225,7 +159,8 @@ export class AppComponent implements OnInit {
 					create: false,
 					persist: false,
 					plugins: [ 'remove_button' ],
-					value: this.model && this.model.iptc,
+          options: this.iptcData,
+					value: this.model.iptc,
 					onItemAdd: (item) => {
 						this.onChangeIPTC(item, (keywords, iptcKeywords, lang) => {
 							// transform IPTC keywords to options and add them to the keywords options
@@ -248,117 +183,103 @@ export class AppComponent implements OnInit {
 			}
 		};
 
-    // this.keywordsField = {
-    //   id: 'keywords',
-    //   type: 'multilang-field',
-    //   templateOptions: {
-    //     multilangKey: 'keywords',
-    //     languages: this.languages,
-    //     selectedLang: this.selectedLang,
-    //     field: {
-    //       type: 'selectize',
-    //       templateOptions: {
-    //         label: 'Keywords (multi)',
-    //         placeholder: 'Keywords',
-    //         selectizeClassName: 'selectize-sm',
-    //         config: {
-    //           maxItems: null,
-    //           create: (input, callback) => {
-    //             const option = {item: input};
-    //
-    //             if (!this.keywordsOptions[ this.selectedLang ]) {
-    //               this.keywordsOptions[ this.selectedLang ] = [];
-    //             }
-    //
-    //             this.keywordsOptions[ this.selectedLang ].push(option);
-    //             callback(option);
-    //           },
-    //           labelField: 'item',
-    //           valueField: 'item',
-    //           searchField: [ 'item' ],
-    //           plugins: [ 'remove_button' ],
-    //         },
-    //         fetchSelectizeOptions: (lang) => {
-    //           console.log('fetch', lang);
-    //           return this.keywordsOptions[ lang ];
-    //         },
-    //         // options: this.keywordsOptions[ lang ],
-    //         required: true,
-    //       },
-    //     },
-    //     hideExpression: (lang) => { return lang !== this.selectedLang; },
-    //   },
-    //   fieldGroup: [],
-    //   // formControl: new FormGroup({}),
-    // };
+    this.keywordsField = {
+      id: 'keywords',
+      type: 'multilang-field',
+      templateOptions: {
+        multilangKey: 'keywords',
+        languages: this.languages,
+        selectedLang: this.selectedLang,
+        field: {
+          type: 'selectize',
+          templateOptions: {
+            label: 'Keywords (multi)',
+            placeholder: 'Keywords',
+            selectizeClassName: 'selectize-sm',
+            config: {
+              maxItems: null,
+              create: (input, callback) => {
+                const option = {item: input};
 
-    // this.keywordsField = this.buildMultilangField('keywords', {
-    //     type: 'selectize',
-    //     templateOptions: {
-    //       label: 'Keywords (multi)',
-    //       placeholder: 'Keywords',
-    //       selectizeClassName: 'selectize-sm',
-    //       config: {
-    //         maxItems: null,
-    //         create: (input, callback) => {
-    //           const option = {item: input};
-    //
-    //           if (!this.keywordsOptions[ this.selectedLang ]) {
-    //             this.keywordsOptions[ this.selectedLang ] = [];
-    //           }
-    //
-    //           this.keywordsOptions[ this.selectedLang ].push(option);
-    //           callback(option);
-    //         },
-    //         labelField: 'item',
-    //         valueField: 'item',
-    //         searchField: [ 'item' ],
-    //         plugins: [ 'remove_button' ],
-    //       },
-    //       fetchSelectizeOptions: (lang) => {
-    //         console.log('fetch', lang);
-    //         return this.keywordsOptions[ lang ];
-    //       },
-    //       // options: this.keywordsOptions[ lang ],
-    //       required: true,
-    //     },
-    //   },
-    //   this.languages,
-    //   this.model.keywords);
+                if (!this.keywordsOptions[this.selectedLang]) {
+                  this.keywordsOptions[this.selectedLang] = [];
+                }
 
+                this.keywordsOptions[this.selectedLang].push(option);
+                callback(option);
+              },
+              labelField: 'item',
+              valueField: 'item',
+              searchField: [ 'item' ],
+              plugins: [ 'remove_button' ],
+            },
+            fetchOptions: (lang) => {
+              return this.keywordsOptions[lang];
+            },
+            fetchValue: (lang) => {
+              return this.model.keywords && this.model.keywords[lang];
+            },
+            required: true,
+          },
+        },
+        hideExpression: (lang) => { return lang !== this.selectedLang; },
+      },
+      fieldGroup: [],
+      // formControl: new FormGroup({}),
+    };
 
-    // this.keywordsField = {
-    // 	id: 'keywords',
-    // 	key: `keywords.${lang}`,
-    // 	type: 'selectize',
-    // 	templateOptions: {
-    // 		label: 'Keywords (multi)',
-    // 		placeholder: 'Keywords',
-    // 		selectizeClassName: 'selectize-sm',
-    // 		config: {
-    // 			maxItems: null,
-    // 			create: (input, callback) => {
-    // 				const option = { item: input };
-    //
-    // 				if(!this.keywordsOptions[lang]) {
-    // 					this.keywordsOptions[lang] = [];
-    // 				}
-    //
-    // 				this.keywordsOptions[lang].push(option);
-    // 				callback(option);
-    // 			},
-    // 			labelField: 'item',
-    // 			valueField: 'item',
-    // 			searchField: ['item'],
-    // 			plugins: [ 'remove_button' ],
-    // 		},
-    // 		value: this.model && this.model.keywords && this.model.keywords[lang],
-    // 		options: this.keywordsOptions[lang],
-    // 		required: true,
-    // 	},
-    // };
 	}
 
+	getFields() {
+		const fields = [
+			// this.titleField,
+			// {
+			// 	fieldGroupClassName: 'row',
+			// 	fieldGroup: [
+			// this.noteField,
+			// 	],
+			// },
+
+			// this.buildFieldGroup('test', [
+				this.iptcField,
+				// this.keywordsField
+			// ]),
+		];
+
+		// setTimeout(() => this.fields = fields);
+		this.fields = fields
+
+	}
+
+	buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
+
+		// Apply 'col' class or specified class
+		fields.forEach((field, index) => {
+			field.className = options && options.fieldClassNames
+				? options.fieldClassNames[index]
+				: 'col';
+		});
+
+		const group = {
+			id: id,
+			fieldGroupClassName: 'row',
+			fieldGroup: fields
+		};
+
+		return group;
+	}
+
+	onChangeLang(payload: NgbTabChangeEvent): void {
+		this.selectedLang = payload.nextId;
+	}
+
+	submit(model) {
+		console.group('submit');
+		console.log('model', model);
+		console.log('form value', this.form.value);
+		// console.log('form', this.form);
+		console.groupEnd();
+	}
 	/**
 	 * Add or Remove keywords on IPTC change
 	 * @param iptcID
@@ -408,8 +329,6 @@ export class AppComponent implements OnInit {
 			return;
 		}
 
-		debugger
-
 		const keywords = map && typeof map === 'function' ? origin[lang].map(map) : origin[lang];
 
 		if(!target[lang]) {
@@ -443,64 +362,5 @@ export class AppComponent implements OnInit {
 	private keywordToOption(keyword: string): any {
 		return { item: keyword };
 	}
-
-	getFields() {
-		const fields = [
-			this.titleField,
-			// {
-			// 	fieldGroupClassName: 'row',
-			// 	fieldGroup: [
-			// this.noteField,
-			// 	],
-			// },
-
-      // this.buildFieldGroup('test', [
-			 //  this.iptcField,
-        // this.keywordsField
-      // ]),
-		];
-
-    this.fields = fields;
-
-	}
-
-  buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
-
-    // Apply 'col' class or specified class
-    fields.forEach((field, index) => {
-      field.className = options && options.fieldClassNames
-        ? options.fieldClassNames[index]
-        : 'col';
-    });
-
-    const group = {
-      id: id,
-      fieldGroupClassName: 'row',
-      fieldGroup: fields
-    };
-
-    return group;
-  }
-
-	onChangeLang(payload: NgbTabChangeEvent): void {
-    this.selectedLang = payload.nextId;
-
-    // const model = Object.assign(this.model, this.form.value);
-
-		// this.initMultilangFields(this.selectedLang);
-		// this.getFields();
-
-    // setTimeout(() => {
-    //   this.form.patchValue(this.model);
-    // });
-  }
-
-  submit(model) {
-	  console.group('submit');
-    console.log('model', model);
-    console.log('form value', this.form.value);
-    console.log('form', this.form);
-    console.groupEnd();
-  }
 
 }

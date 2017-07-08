@@ -60,14 +60,20 @@ export class FormlyMultilangField extends FieldType implements OnInit {
 
       newField.templateOptions.label = `${newField.templateOptions.label} ${lang.code}`;
 
-      if(this.model) {
-        newField.templateOptions.value = this.model[lang.code];
-      }
+      // if(this.model) {
+      //   newField.templateOptions.value = this.model[lang.code];
+      // }
 
       if(newField.type === 'selectize') {
 				newField.templateOptions.options = newField.templateOptions.fetchOptions(lang.code);
 				newField.templateOptions.value = newField.templateOptions.fetchValue(lang.code);
-				// debugger
+
+				// const value = newField.templateOptions.value;
+				// const options = newField.templateOptions.config.options;
+				//
+				// newField.templateOptions.config.options = options && options[lang.code];
+				// newField.templateOptions.value = value && value[lang.code];
+
       }
 
       field.fieldGroup.push(newField);

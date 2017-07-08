@@ -151,7 +151,9 @@ export class AppComponent implements OnInit {
 				label: 'IPTC',
 				placeholder: 'IPTC',
 				selectizeClassName: 'selectize-sm',
+				value: this.model.iptc,
 				config: {
+					options: this.iptcData,
 					valueField: 'id',
 					labelField: 'label',
 					searchField: 'label',
@@ -159,8 +161,6 @@ export class AppComponent implements OnInit {
 					create: false,
 					persist: false,
 					plugins: [ 'remove_button' ],
-          options: this.iptcData,
-					value: this.model.iptc,
 					onItemAdd: (item) => {
 						this.onChangeIPTC(item, (keywords, iptcKeywords, lang) => {
 							// transform IPTC keywords to options and add them to the keywords options
@@ -212,8 +212,10 @@ export class AppComponent implements OnInit {
               valueField: 'item',
               searchField: [ 'item' ],
               plugins: [ 'remove_button' ],
+							// options: this.keywordsOptions,
             },
-            fetchOptions: (lang) => {
+						// value: this.model.keywords,
+						fetchOptions: (lang) => {
               return this.keywordsOptions[lang];
             },
             fetchValue: (lang) => {
@@ -232,7 +234,7 @@ export class AppComponent implements OnInit {
 
 	getFields() {
 		const fields = [
-			// this.titleField,
+			this.titleField,
 			// {
 			// 	fieldGroupClassName: 'row',
 			// 	fieldGroup: [
@@ -242,7 +244,7 @@ export class AppComponent implements OnInit {
 
 			// this.buildFieldGroup('test', [
 				this.iptcField,
-				// this.keywordsField
+				this.keywordsField
 			// ]),
 		];
 
@@ -251,7 +253,7 @@ export class AppComponent implements OnInit {
 
 	}
 
-	buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
+	private buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
 
 		// Apply 'col' class or specified class
 		fields.forEach((field, index) => {

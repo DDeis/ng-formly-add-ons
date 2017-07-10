@@ -117,6 +117,7 @@ export class AppComponent {
       type: 'multilang-field',
       templateOptions: {
         multilangKey: 'title',
+				label: 'Title (multi)',
         languages: this.languages,
         selectedLang: this.selectedLang,
 				field: {

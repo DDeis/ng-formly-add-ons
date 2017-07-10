@@ -35,15 +35,18 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
   }
 
   ngOnInit() {
-    this.buildMultilangField(this.to.multilangKey, this.to.field, this.to.languages, this.to.validators);
+    this.buildMultilangField(this.to.multilangKey, this.to.field, this.to.languages, this.to);
   }
 
-  private buildMultilangField(multilangFieldKey: string, baseField: FormlyFieldConfig, languages: any[], validators: any): void {
+  private buildMultilangField(multilangFieldKey: string, baseField: FormlyFieldConfig, languages: any[], to: any): void {
 
     const field = {
       key: multilangFieldKey,
       fieldGroup: [],
-			validators: validators || {},
+			validators: to.validators || {},
+			templateOptions: {
+				label: to.label,
+			}
     };
 
 		const fields = [];

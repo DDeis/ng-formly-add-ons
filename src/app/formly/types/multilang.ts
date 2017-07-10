@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
-
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import * as _ from 'lodash';
 
-import { FieldType, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
+import { FieldType, FormlyFormBuilder, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
 
 @Component({
   selector: 'formly-multilang-field',
@@ -11,12 +10,11 @@ import { FieldType, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
       <formly-form [fields]="fields"
                    [model]="model"
                    [form]="formlyGroup"
-                   [options]="newOptions"
-                   [buildForm]="true">
+                   [options]="newOptions">
       </formly-form>
   `,
 })
-export class FormlyMultilangField extends FieldType implements OnInit {
+export class FormlyMultilangField extends FieldType implements OnInit, OnChanges {
 
   fields;
 
@@ -32,7 +30,7 @@ export class FormlyMultilangField extends FieldType implements OnInit {
     }
   }
 
-  constructor(private formlyConfig: FormlyConfig) {
+  constructor(private formlyConfig: FormlyConfig, private formlyBuilder: FormlyFormBuilder) {
     super();
   }
 
@@ -47,6 +45,8 @@ export class FormlyMultilangField extends FieldType implements OnInit {
       fieldGroup: [],
     };
 
+		const fields = [];
+
     languages.forEach(lang => {
       const newField: FormlyFieldConfig = Object.assign(
         {},
@@ -54,29 +54,19 @@ export class FormlyMultilangField extends FieldType implements OnInit {
         {
           id: `${multilangFieldKey}-${lang.code}`,
           key: lang.code,
-          // hideExpression: () => this.to.hideExpression(lang.code),
         });
 
-
       newField.templateOptions.label = `${newField.templateOptions.label} ${lang.code}`;
-
-      // if(this.model) {
-      //   newField.templateOptions.value = this.model[lang.code];
-      // }
 
       if(newField.type === 'selectize') {
 				newField.templateOptions.options = newField.templateOptions.fetchOptions(lang.code);
 				newField.templateOptions.value = newField.templateOptions.fetchValue(lang.code);
-
-				// const value = newField.templateOptions.value;
-				// const options = newField.templateOptions.config.options;
-				//
-				// newField.templateOptions.config.options = options && options[lang.code];
-				// newField.templateOptions.value = value && value[lang.code];
-
       }
 
-      field.fieldGroup.push(newField);
+      field.fieldGroup.push({
+        fieldGroup: [newField],
+        hideExpression: () => this.to.hideExpression(lang.code),
+      });
     });
 
     this.fields = [ field ];

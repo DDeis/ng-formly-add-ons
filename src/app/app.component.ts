@@ -13,9 +13,9 @@ import { FormlyFieldConfig, FormlyForm } from 'ng-formly';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-	@ViewChild('langTabs') langTabs: NgbTabset;
+  @ViewChild('langTabs') langTabs: NgbTabset;
   @ViewChild('formly') formly: FormlyForm;
 
   form: FormGroup;
@@ -29,7 +29,6 @@ export class AppComponent implements OnInit {
 	keywordsOptions: any;
 
 	titleField: FormlyFieldConfig;
-  noteField: FormlyFieldConfig;
 	iptcField: FormlyFieldConfig;
 	keywordsField: FormlyFieldConfig;
 
@@ -39,33 +38,14 @@ export class AppComponent implements OnInit {
 
     this.form = this.formBuilder.group({});
 
+		this.languages = [
+			{ code: 'en', label: 'English' },
+			{ code: 'fr', label: 'French' },
+			{ code: 'de', label: 'German' },
+		];
     this.selectedLang = 'en';
 
-    this.initData();
-		this.initFields();
-    this.getFields();
-
-	}
-
-	initData() {
-
-    const model = {
-      title: {
-        en: 'This is an English Title',
-        fr: 'This is a French Title',
-      },
-      note: 'Test note',
-      iptc: [ '2' ],
-      keywords: {
-        en: ['Default IPTC keyword'],
-        fr: ['Manual keyword'],
-        de: []
-      }
-    };
-
-    this.model = model;
-
-		this.iptcData = [
+    this.iptcData = [
 			{
 				id: '0',
 				label: 'IPTC 1',
@@ -93,17 +73,39 @@ export class AppComponent implements OnInit {
 			},
 		];
 
-		this.languages = [
-			{ code: 'en', label: 'English' },
-			{ code: 'fr', label: 'French' },
-			{ code: 'de', label: 'German' },
-		];
-
 		this.keywordsOptions = {
 			en: [ { item: 'Default IPTC keyword'}],
 			fr: [ { item: 'Manual keyword'}],
 			de: [ ]
 		};
+
+    const model = {
+      title: {
+        en: 'This is an English Title',
+        fr: 'This is a French Title',
+      },
+      iptc: [ '2' ],
+      keywords: {
+        en: ['Default IPTC keyword'],
+        fr: ['Manual keyword'],
+        de: []
+      }
+    };
+
+    this.model = model;
+
+		this.initFields();
+
+		const fields = [
+			this.titleField,
+			this.buildFieldGroup('iptc', [
+				this.iptcField,
+				this.keywordsField
+			]),
+		];
+
+		this.fields = fields;
+
 	}
 
 	initFields() {
@@ -124,24 +126,9 @@ export class AppComponent implements OnInit {
 	          required: true,
 	        },
 	      },
-        hideExpression: (lang) => { return lang !== this.selectedLang; },
+        hideExpression: lang => lang !== this.selectedLang,
       },
       fieldGroup: [],
-      // formControl: new FormGroup({}),
-    };
-
-    this.noteField = {
-      id: 'note',
-      key: 'note',
-      type: 'input',
-			className: 'col',
-      templateOptions: {
-        label: 'Note',
-        placeholder: 'Note',
-        inputClassName: 'form-control-sm',
-        required: true,
-      },
-      expressionProperties: { }
     };
 
     this.iptcField = {
@@ -212,63 +199,17 @@ export class AppComponent implements OnInit {
               valueField: 'item',
               searchField: [ 'item' ],
               plugins: [ 'remove_button' ],
-							// options: this.keywordsOptions,
             },
-						// value: this.model.keywords,
-						fetchOptions: (lang) => {
-              return this.keywordsOptions[lang];
-            },
-            fetchValue: (lang) => {
-              return this.model.keywords && this.model.keywords[lang];
-            },
+						fetchOptions: lang => this.keywordsOptions[lang],
+            fetchValue: lang => this.model.keywords && this.model.keywords[lang],
             required: true,
           },
         },
-        hideExpression: (lang) => { return lang !== this.selectedLang; },
+        hideExpression: lang => lang !== this.selectedLang,
       },
       fieldGroup: [],
-      // formControl: new FormGroup({}),
     };
 
-	}
-
-	getFields() {
-		const fields = [
-			this.titleField,
-			// {
-			// 	fieldGroupClassName: 'row',
-			// 	fieldGroup: [
-			// this.noteField,
-			// 	],
-			// },
-
-			// this.buildFieldGroup('test', [
-				this.iptcField,
-				this.keywordsField
-			// ]),
-		];
-
-		// setTimeout(() => this.fields = fields);
-		this.fields = fields
-
-	}
-
-	private buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
-
-		// Apply 'col' class or specified class
-		fields.forEach((field, index) => {
-			field.className = options && options.fieldClassNames
-				? options.fieldClassNames[index]
-				: 'col';
-		});
-
-		const group = {
-			id: id,
-			fieldGroupClassName: 'row',
-			fieldGroup: fields
-		};
-
-		return group;
 	}
 
 	onChangeLang(payload: NgbTabChangeEvent): void {
@@ -278,10 +219,9 @@ export class AppComponent implements OnInit {
 	submit(model) {
 		console.group('submit');
 		console.log('model', model);
-		console.log('form value', this.form.value);
-		// console.log('form', this.form);
 		console.groupEnd();
 	}
+
 	/**
 	 * Add or Remove keywords on IPTC change
 	 * @param iptcID
@@ -292,28 +232,15 @@ export class AppComponent implements OnInit {
 		method: (target: any, origin: any, lang: string) => void
 	): void {
 		const iptcItem = this.iptcData[iptcID];
-		const iptcKeywords = iptcItem.keywords || {};
-
-		// Creating a new keywords object with the existing keywords
+		const iptcKeywords = iptcItem && iptcItem.keywords || {};
 
 		// For each IPTC keywords lang
 		for(let lang in iptcKeywords) {
-
-			// this.addControl(this.form.get('keywords'), lang);
-
 			// Call add or remove method
 			method(this.model.keywords, iptcKeywords, lang);
-
 		}
 
-    // for(let lang in this.model.keywords) {
-    //   this.addControl(this.form.get('keywords'), lang);
-    // }
-
     const keywords = Object.assign({}, this.model.keywords);
-
-		// Creating form model with the existing model and the new keywords
-		// this.form.get('keywords').setValue(this.model.keywords);
 
 		this.form.patchValue({keywords: keywords});
 
@@ -348,7 +275,6 @@ export class AppComponent implements OnInit {
 	 * @param lang
 	 */
 	private removeKeywords(target: any, origin: any, lang: string): void {
-	  console.log('remove');
 		if(!target || !origin || !lang) {
 			return;
 		}
@@ -365,4 +291,21 @@ export class AppComponent implements OnInit {
 		return { item: keyword };
 	}
 
+	private buildFieldGroup(id: string, fields: FormlyFieldConfig[], options?: { fieldClassNames?: string[] }): FormlyFieldConfig {
+
+		// Apply 'col' class or specified class
+		fields.forEach((field, index) => {
+			field.className = options && options.fieldClassNames
+				? options.fieldClassNames[index]
+				: 'col';
+		});
+
+		const group = {
+			id: id,
+			fieldGroupClassName: 'row',
+			fieldGroup: fields
+		};
+
+		return group;
+	}
 }

@@ -8,6 +8,8 @@ import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormlyFieldConfig, FormlyForm } from 'ng-formly';
 
+import { ValidationService } from './validation.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -123,9 +125,11 @@ export class AppComponent {
 	          label: 'Title (multi)',
 	          placeholder: 'Title',
 	          inputClassName: 'form-control-sm',
-	          required: true,
 	        },
 	      },
+				validators: {
+          validation: Validators.compose([ValidationService.atLeastOneFieldValidator]),
+        },
         hideExpression: lang => lang !== this.selectedLang,
       },
       fieldGroup: [],
@@ -202,7 +206,6 @@ export class AppComponent {
             },
 						fetchOptions: lang => this.keywordsOptions[lang],
             fetchValue: lang => this.model.keywords && this.model.keywords[lang],
-            required: true,
           },
         },
         hideExpression: lang => lang !== this.selectedLang,
@@ -219,6 +222,7 @@ export class AppComponent {
 	submit(model) {
 		console.group('submit');
 		console.log('model', model);
+		console.log('form', this.form);
 		console.groupEnd();
 	}
 

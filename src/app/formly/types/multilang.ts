@@ -40,8 +40,6 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
 
   private buildMultilangField(templateOptions): void {
 
-    debugger
-
     const key = templateOptions.key;
     const baseField = templateOptions.field;
     const languages = templateOptions.languages;

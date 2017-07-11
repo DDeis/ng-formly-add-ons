@@ -110,6 +110,18 @@ export class AppComponent implements AfterViewChecked {
 				this.iptcField,
 				this.keywordsField
 			]),
+			this.buildRepeatSection('test', [
+				{
+					className: 'col',
+					type: 'input',
+					key: 'investmentName',
+					templateOptions: {
+						label: 'Name of Investment:',
+						inputClassName: 'form-control-sm',
+						required: true,
+					},
+				},
+			])
 		];
 
 		this.fields = fields;
@@ -233,14 +245,6 @@ export class AppComponent implements AfterViewChecked {
 
 	}
 
-	private check(form: FormGroup, fieldKey) {
-	  if(form && form.get(fieldKey).value) {
-	    return true;
-    }
-
-    return false
-  }
-
 	onChangeLang(payload: NgbTabChangeEvent): void {
 	  const lang = payload.nextId;
 
@@ -338,12 +342,38 @@ export class AppComponent implements AfterViewChecked {
 				: 'col';
 		});
 
-		const group = {
+		const group: FormlyFieldConfig = {
 			id: id,
 			fieldGroupClassName: 'row',
 			fieldGroup: fields
 		};
 
 		return group;
+	}
+
+	private buildRepeatSection(key: string, fields: FormlyFieldConfig[]): FormlyFieldConfig {
+
+		const templateOptions = {
+			autoAddSection: true,
+			addButtonText: 'Add',
+			// addButtonIcon: 'fa-trash',
+			addButtonClassName: 'btn-primary btn-sm',
+			// removeButtonText: 'Remove',
+			removeButtonIcon: 'fa-trash',
+			removeButtonClassName: 'btn-danger btn-sm',
+		};
+
+		const array: FormlyFieldConfig = {
+        key: key,
+        type: 'repeat-section',
+        fieldArray: {
+          className: 'row',
+          templateOptions: templateOptions,
+          fieldGroup: fields,
+        },
+			};
+
+			return array;
+
 	}
 }

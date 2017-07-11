@@ -38,13 +38,13 @@ export class ValidationService {
         return { atLeastOneFieldRequired: true };
     }
 
-    static conditionalRequiredValidator(form: FormGroup, field, lang) {
+    static conditionalRequiredValidator(form: FormGroup, formControlName: string|string[]) {
 
       let changesSubscribed = false;
 
       return (control: AbstractControl) => {
 
-        const linkedField = form.get([field, lang]);
+        const linkedField = form.get(formControlName);
 
         if(!changesSubscribed) {
           linkedField.valueChanges

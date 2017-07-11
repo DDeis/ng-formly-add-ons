@@ -223,7 +223,7 @@ export class AppComponent implements AfterViewChecked {
             field.templateOptions.value = this.model.keywords && this.model.keywords[lang];
           },
           validators: {
-            required: (lang) => ValidationService.conditionalRequiredValidator(this.form, 'title', lang),
+            required: (lang) => ValidationService.conditionalRequiredValidator(this.form, ['title', lang]),
           },
           hideExpression: lang => lang !== this.selectedLang,
         }

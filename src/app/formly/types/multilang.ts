@@ -35,17 +35,23 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
   }
 
   ngOnInit() {
-    this.buildMultilangField(this.to.multilangKey, this.to.field, this.to.languages, this.to);
+    this.buildMultilangField(this.to);
   }
 
-  private buildMultilangField(multilangFieldKey: string, baseField: FormlyFieldConfig, languages: any[], to: any): void {
+  private buildMultilangField(templateOptions): void {
+
+    debugger
+
+    const key = templateOptions.key;
+    const baseField = templateOptions.field;
+    const languages = templateOptions.languages;
+    const fieldExpression = templateOptions.fieldExpression;
 
     const field = {
-      key: multilangFieldKey,
+      key: key,
       fieldGroup: [],
-			validators: to.validators || {},
 			templateOptions: {
-				label: to.label,
+				label: templateOptions.label,
 			}
     };
 
@@ -53,23 +59,28 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
 
     languages.forEach(lang => {
       const newField: FormlyFieldConfig = Object.assign(
-        {},
-        _.cloneDeep(baseField),
-        {
-          id: `${multilangFieldKey}-${lang.code}`,
-          key: lang.code,
-        });
+          {
+            id: `${key}-${lang}`,
+            key: lang,
+            templateOptions: {},
+            validators: {},
+          },
+          _.cloneDeep(baseField),
+        );
 
-      newField.templateOptions.label = `${newField.templateOptions.label} ${lang.code}`;
+      if(fieldExpression.validators) {
+        for(let validator in fieldExpression.validators) {
+          newField.validators[validator] = fieldExpression.validators[validator](lang);
+        }
+      }
 
-      if(newField.type === 'selectize') {
-				newField.templateOptions.options = newField.templateOptions.fetchOptions(lang.code);
-				newField.templateOptions.value = newField.templateOptions.fetchValue(lang.code);
+      if(fieldExpression.fieldMapping) {
+        fieldExpression.fieldMapping(newField, lang);
       }
 
       field.fieldGroup.push({
         fieldGroup: [newField],
-        hideExpression: () => this.to.hideExpression(lang.code),
+        hideExpression: () => fieldExpression.hideExpression(lang),
       });
     });
 

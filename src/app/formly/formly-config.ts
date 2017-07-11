@@ -42,6 +42,7 @@ export const CUSTOM_FORMLY_CONFIG: ConfigOption  = {
   validators: [{ name: 'required', validation: Validators.required}],
   validationMessages: [
     { name: 'required', message: getRequiredValidationMessage },
+    { name: 'atLeastOneFieldRequired', message: getAtLeastOneFieldRRequiredValidationMessage },
     { name: 'invalidEmailAddress', message: 'Invalid Email Address' },
     { name: 'maxlength', message: 'Maximum Length Exceeded.' },
     { name: 'minlength', message: getMinLengthValidationMessage },
@@ -70,6 +71,10 @@ export const CUSTOM_FORMLY_CONFIG: ConfigOption  = {
 
 export function getRequiredValidationMessage(err, field): string {
   return `${field.templateOptions.label} is required.`;
+}
+
+export function getAtLeastOneFieldRRequiredValidationMessage(err, field): string {
+  return `At least one ${field.templateOptions.label} is required.`;
 }
 
 export function getMinLengthValidationMessage(err): string {

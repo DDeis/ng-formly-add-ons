@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Http } from '@angular/http';
 
@@ -9,13 +9,14 @@ import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { FormlyFieldConfig, FormlyForm } from 'ng-formly';
 
 import { ValidationService } from './validation.service';
+import { debug } from 'util';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewChecked {
 
   @ViewChild('langTabs') langTabs: NgbTabset;
   @ViewChild('formly') formly: FormlyForm;
@@ -34,7 +35,12 @@ export class AppComponent {
 	iptcField: FormlyFieldConfig;
 	keywordsField: FormlyFieldConfig;
 
-	constructor(private http: Http, private formBuilder: FormBuilder) { }
+	constructor(private http: Http, private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef) { }
+
+  ngAfterViewChecked() {
+    //explicit change detection to avoid "expression-has-changed-after-it-was-checked-error"
+    this.changeDetectorRef.detectChanges();
+  }
 
 	ngOnInit() {
 
@@ -84,7 +90,7 @@ export class AppComponent {
     const model = {
       title: {
         en: 'This is an English Title',
-        fr: 'This is a French Title',
+        // fr: 'This is a French Title',
       },
       iptc: [ '2' ],
       keywords: {
@@ -112,26 +118,28 @@ export class AppComponent {
 
 	initFields() {
 
+
     this.titleField = {
       id: 'title',
       type: 'multilang-field',
       templateOptions: {
-        multilangKey: 'title',
-				label: 'Title (multi)',
-        languages: this.languages,
-        selectedLang: this.selectedLang,
+        key: 'title',
+        languages: this.languages.map(lang => lang.code),
 				field: {
-	        type: 'input',
+	        type: 'input-horizontal',
 	        templateOptions: {
-	          label: 'Title (multi)',
+	          label: 'Title',
 	          placeholder: 'Title',
 	          inputClassName: 'form-control-sm',
+
 	        },
+          validators: {
+            validation: Validators.compose([ ValidationService.atLeastOneFieldRequiredValidator ]),
+          },
 	      },
-				validators: {
-          validation: Validators.compose([ValidationService.atLeastOneFieldValidator]),
-        },
-        hideExpression: lang => lang !== this.selectedLang,
+        fieldExpression: {
+          hideExpression: lang => lang !== this.selectedLang,
+        }
       },
       fieldGroup: [],
     };
@@ -175,17 +183,17 @@ export class AppComponent {
 			}
 		};
 
+
     this.keywordsField = {
       id: 'keywords',
       type: 'multilang-field',
       templateOptions: {
-        multilangKey: 'keywords',
-        languages: this.languages,
-        selectedLang: this.selectedLang,
+        key: 'keywords',
+        languages: this.languages.map(lang => lang.code),
         field: {
           type: 'selectize',
           templateOptions: {
-            label: 'Keywords (multi)',
+            label: 'Keywords',
             placeholder: 'Keywords',
             selectizeClassName: 'selectize-sm',
             config: {
@@ -205,19 +213,40 @@ export class AppComponent {
               searchField: [ 'item' ],
               plugins: [ 'remove_button' ],
             },
-						fetchOptions: lang => this.keywordsOptions[lang],
-            fetchValue: lang => this.model.keywords && this.model.keywords[lang],
           },
         },
-        hideExpression: lang => lang !== this.selectedLang,
+        fieldExpression: {
+          // options: lang => this.keywordsOptions[lang],
+          // value: lang => this.model.keywords && this.model.keywords[lang],
+          fieldMapping: (field, lang) => {
+            field.templateOptions.options = this.keywordsOptions[lang];
+            field.templateOptions.value = this.model.keywords && this.model.keywords[lang];
+          },
+          validators: {
+            required: (lang) => ValidationService.conditionalRequiredValidator(this.form, 'title', lang),
+          },
+          hideExpression: lang => lang !== this.selectedLang,
+        }
       },
       fieldGroup: [],
     };
 
 	}
 
+	private check(form: FormGroup, fieldKey) {
+	  if(form && form.get(fieldKey).value) {
+	    return true;
+    }
+
+    return false
+  }
+
 	onChangeLang(payload: NgbTabChangeEvent): void {
-		this.selectedLang = payload.nextId;
+	  const lang = payload.nextId;
+
+		this.selectedLang = lang;
+
+		this.form.get('title').get(lang).updateValueAndValidity();
 	}
 
 	submit(model) {
@@ -243,6 +272,10 @@ export class AppComponent {
 		for(let lang in iptcKeywords) {
 			// Call add or remove method
 			method(this.model.keywords, iptcKeywords, lang);
+
+      if(this.form.get('keywords')) {
+        this.form.get('keywords').get(lang).markAsTouched();
+      }
 		}
 
     const keywords = Object.assign({}, this.model.keywords);

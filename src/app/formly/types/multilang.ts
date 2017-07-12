@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import * as _ from 'lodash';
+
+import * as cloneDeep from 'lodash.clonedeep';
 
 import { FieldType, FormlyFormBuilder, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
 
@@ -28,10 +29,6 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
     } else {
       return this.form;
     }
-  }
-
-  constructor(private formlyConfig: FormlyConfig, private formlyBuilder: FormlyFormBuilder) {
-    super();
   }
 
   ngOnInit() {
@@ -63,19 +60,22 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
             templateOptions: {},
             validators: {},
           },
-          _.cloneDeep(baseField),
+          cloneDeep(baseField),
         );
 
+      // Set validators
       if(fieldExpression.validators) {
         for(let validator in fieldExpression.validators) {
           newField.validators[validator] = fieldExpression.validators[validator](lang);
         }
       }
 
+      // Set field specific information
       if(fieldExpression.fieldMapping) {
         fieldExpression.fieldMapping(newField, lang);
       }
 
+      // Wrap new field in a fieldGroup to prevent formControl to be detached
       field.fieldGroup.push({
         fieldGroup: [newField],
         hideExpression: () => fieldExpression.hideExpression(lang),

@@ -367,10 +367,18 @@ export class AppComponent implements AfterViewChecked {
         key: key,
         type: 'repeat-section',
         fieldArray: {
-          className: 'row',
-          templateOptions: templateOptions,
+          fieldGroupClassName: 'row',
           fieldGroup: fields,
         },
+        templateOptions: {
+          autoAddSection: true,
+          addButtonText: 'Add',
+          // addButtonIcon: 'fa-trash',
+          addButtonClassName: 'btn-primary btn-sm',
+          // removeButtonText: 'Remove',
+          removeButtonIcon: 'fa-trash',
+          removeButtonClassName: 'btn-danger btn-sm',
+        }
 			};
 
 			return array;

@@ -1,15 +1,12 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Http } from '@angular/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as _ from 'lodash';
 
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
-
 import { FormlyFieldConfig, FormlyForm } from 'ng-formly';
 
 import { ValidationService } from './validation.service';
-import { debug } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +32,7 @@ export class AppComponent implements AfterViewChecked {
 	iptcField: FormlyFieldConfig;
 	keywordsField: FormlyFieldConfig;
 
-	constructor(private http: Http, private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef) { }
+	constructor(private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngAfterViewChecked() {
     //explicit change detection to avoid "expression-has-changed-after-it-was-checked-error"

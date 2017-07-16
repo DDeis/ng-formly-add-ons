@@ -6,23 +6,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
 
-import { FormlyCustomModule } from './formly/formly-custom.module'
+import { FormlyCustomModule } from './formly/formly-custom.module';
 
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-		HttpModule,
-		FormsModule, ReactiveFormsModule,
-		NgSelectizeModule,
-		NgbModule.forRoot(),
-    FormlyCustomModule,
+    HttpModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgSelectizeModule,
+    NgbModule.forRoot(),
+    FormlyCustomModule
   ],
   providers: [],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

@@ -13,10 +13,9 @@ import { FieldType, FormlyFormBuilder, FormlyConfig, FormlyFieldConfig } from 'n
                    [form]="formlyGroup"
                    [options]="newOptions">
       </formly-form>
-  `,
+  `
 })
 export class FormlyMultilangField extends FieldType implements OnInit, OnChanges {
-
   fields;
 
   get newOptions() {
@@ -36,7 +35,6 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
   }
 
   private buildMultilangField(templateOptions): void {
-
     const key = templateOptions.key;
     const baseField = templateOptions.field;
     const languages = templateOptions.languages;
@@ -45,43 +43,43 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
     const field = {
       key: key,
       fieldGroup: [],
-			templateOptions: {
-				label: templateOptions.label,
-			}
+      templateOptions: {
+        label: templateOptions.label
+      }
     };
 
-		const fields = [];
+    const fields = [];
 
     languages.forEach(lang => {
       const newField: FormlyFieldConfig = Object.assign(
-          {
-            id: `${key}-${lang}`,
-            key: lang,
-            templateOptions: {},
-            validators: {},
-          },
-          cloneDeep(baseField),
-        );
+        {
+          id: `${key}-${lang}`,
+          key: lang,
+          templateOptions: {},
+          validators: {}
+        },
+        cloneDeep(baseField)
+      );
 
       // Set validators
-      if(fieldExpression.validators) {
-        for(let validator in fieldExpression.validators) {
+      if (fieldExpression.validators) {
+        for (let validator in fieldExpression.validators) {
           newField.validators[validator] = fieldExpression.validators[validator](lang);
         }
       }
 
       // Set field specific information
-      if(fieldExpression.fieldMapping) {
+      if (fieldExpression.fieldMapping) {
         fieldExpression.fieldMapping(newField, lang);
       }
 
       // Wrap new field in a fieldGroup to prevent formControl to be detached
       field.fieldGroup.push({
         fieldGroup: [newField],
-        hideExpression: () => fieldExpression.hideExpression(lang),
+        hideExpression: () => fieldExpression.hideExpression(lang)
       });
     });
 
-    this.fields = [ field ];
+    this.fields = [field];
   }
 }

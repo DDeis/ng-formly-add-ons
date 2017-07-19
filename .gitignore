@@ -4,7 +4,7 @@
 /dist
 /tmp
 /out-tsc
-.ng_build/
+#.ng_build/
 
 # dependencies
 /node_modules

@@ -15,8 +15,6 @@ import { FormlyHorizontalWrapper } from './wrappers/horizontal.wrapper';
 import { FormlyPanelWrapper } from './wrappers/panel.wrapper';
 import { FormlyLabelWrapper } from './wrappers/label.wrapper';
 
-
-
 export const CUSTOM_FIELD_TYPE_COMPONENTS = [
   FormlyHorizontalWrapper, FormlyPanelWrapper, FormlyLabelWrapper,
 

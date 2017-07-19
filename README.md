@@ -1,4 +1,4 @@
-# ng-formly Add-Ons
+# Add-Ons for [ng-formly](https://github.com/formly-js/ng-formly)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.0.
 

@@ -17,13 +17,13 @@ import { FormlyLabelWrapper } from './wrappers/label.wrapper';
 
 
 
-// export const CUSTOM_FIELD_TYPE_COMPONENTS = [
-//   FormlyHorizontalWrapper, FormlyPanelWrapper, FormlyLabelWrapper,
-//
-//   FormlyFieldInput, FormlyFieldTextArea, FormlyFieldSelect, FormlyFieldRadio,
-//   FormlyFieldSelectize,
-//   FormlyRepeatSection, FormlyMultilangField,
-// ];
+export const CUSTOM_FIELD_TYPE_COMPONENTS = [
+  FormlyHorizontalWrapper, FormlyPanelWrapper, FormlyLabelWrapper,
+
+  FormlyFieldInput, FormlyFieldTextArea, FormlyFieldSelect, FormlyFieldRadio,
+  FormlyFieldSelectize,
+  FormlyRepeatSection, FormlyMultilangField,
+];
 
 export const CUSTOM_FORMLY_CONFIG: ConfigOption  = {
   types: [

@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+.ng_build/
 
 # dependencies
 /node_modules
@@ -40,5 +41,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-formly-old/

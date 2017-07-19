@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
 
-import { FormlyCustomModule } from './formly/formly-custom.module';
+import { FormlyCustomModule } from '@ddeis/ng-formly-add-ons';
 
 import { AppComponent } from './app.component';
 

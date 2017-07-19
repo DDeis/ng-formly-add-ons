@@ -15,6 +15,12 @@
     "lib": [
       "es2016",
       "dom"
-    ]
-  }
+    ],
+    "paths": {
+      "@ddeis/ng-formly-add-ons": [ "dist/ng-formly-add-ons" ]
+    }
+  },
+  "exclude": [
+    ".ng_build"
+  ]
 }

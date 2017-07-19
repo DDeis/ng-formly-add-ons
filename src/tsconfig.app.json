@@ -1,10 +1,18 @@
 {
   "extends": "../tsconfig.json",
+  "angularCompilerOptions": {
+    "paths": {
+      "@ddeis/ng-formly-add-ons": [ "../dist/ng-formly-add-ons" ]
+    }
+  },
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "module": "es2015",
     "baseUrl": "",
-    "types": []
+    "types": [],
+    "paths": {
+      "@ddeis/ng-formly-add-ons": [ "../dist/ng-formly-add-ons" ]
+    }
   },
   "exclude": [
     "test.ts",

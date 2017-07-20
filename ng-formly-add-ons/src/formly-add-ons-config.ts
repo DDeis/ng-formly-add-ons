@@ -39,7 +39,7 @@ import { ConfigOption } from 'ng-formly';
 //     { name: 'select-horizontal', extends: 'select' },
 //     { name: 'selectize-horizontal', extends: 'selectize' },
 //   ],
-//   validators: [{ name: 'required', validation: Validators.required}],
+//   // validators: [{ name: 'required', validation: Validators.required}],
 //   validationMessages: [
 //     { name: 'required', message: getRequiredValidationMessage },
 //     { name: 'atLeastOneFieldRequired', message: getAtLeastOneFieldRRequiredValidationMessage },
@@ -68,17 +68,17 @@ import { ConfigOption } from 'ng-formly';
 //     { name: 'label', component: FormlyLabelWrapper },
 //   ],
 // };
-//
-// export function getRequiredValidationMessage(err, field): string {
-//   return `${field.templateOptions.label} is required.`;
-// }
-//
-// export function getAtLeastOneFieldRRequiredValidationMessage(err, field): string {
-//   return `At least one ${field.templateOptions.label} is required.`;
-// }
-//
-// export function getMinLengthValidationMessage(err): string {
-//   return `Should have at least ${err.requiredLength} Characters`;
-// }
+
+export function getRequiredValidationMessage(err, field): string {
+  return `${field.templateOptions.label} is required.`;
+}
+
+export function getAtLeastOneFieldRRequiredValidationMessage(err, field): string {
+  return `At least one ${field.templateOptions.label} is required.`;
+}
+
+export function getMinLengthValidationMessage(err): string {
+  return `Should have at least ${err.requiredLength} Characters`;
+}
 
 export const EXPORT_TEST: any[] = []

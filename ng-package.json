@@ -4,6 +4,10 @@
   "dest": "dist/ng-formly-add-ons",
   "workingDirectory": ".ng_build",
   "lib": {
-    "entryFile": "src/public_api.ts"
+    "entryFile": "src/public_api.ts",
+    "externals": {
+      "rxjs/**": "Rx"
+    }
   }
+
 }

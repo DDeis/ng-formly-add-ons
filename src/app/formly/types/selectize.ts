@@ -16,7 +16,7 @@ import { FieldType } from 'ng-formly';
 									[enabled]="enabled"
 									[errorClass]="errorClass"
 									[optionGroups]="optionGroups"
-									[(ngModel)]="value"
+									[ngModel]="value"
 		              [formControl]="formControl"
 		              [formlyAttributes]="field">
 		</ng-selectize>

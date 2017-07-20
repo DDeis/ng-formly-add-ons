@@ -2,10 +2,11 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { FormlyModule, FormlyBootstrapModule } from 'ng-formly'; // => TypeError: Cannot read property 'path' of undefined at TsickleCompilerHost.getSourceMapKeyForSourceFile
+// import { FormlyModule, FormlyBootstrapModule } from 'ng-formly'; // => TypeError: Cannot read property 'path' of undefined at TsickleCompilerHost.getSourceMapKeyForSourceFile
 import { NgSelectizeModule } from 'ng-selectize';
 
-import { CUSTOM_FORMLY_CONFIG, CUSTOM_FIELD_TYPE_COMPONENTS } from './formly-add-ons-config'; // => TypeError: Cannot read property 'path' of undefined at TsickleCompilerHost.getSourceMapKeyForSourceFile
+// import { CUSTOM_FORMLY_CONFIG, CUSTOM_FIELD_TYPE_COMPONENTS } from './formly-add-ons-config'; // => TypeError: Cannot read property 'path' of undefined at TsickleCompilerHost.getSourceMapKeyForSourceFile
+import { EXPORT_TEST } from './formly-add-ons-config';
 
 @NgModule({
   imports: [
@@ -14,15 +15,15 @@ import { CUSTOM_FORMLY_CONFIG, CUSTOM_FIELD_TYPE_COMPONENTS } from './formly-add
 
     NgSelectizeModule,
 
-    FormlyModule.forRoot(CUSTOM_FORMLY_CONFIG),
-    FormlyBootstrapModule,
+    // FormlyModule.forRoot(CUSTOM_FORMLY_CONFIG),
+    // FormlyBootstrapModule,
   ],
   declarations: [
-    ...CUSTOM_FIELD_TYPE_COMPONENTS,
+    // ...CUSTOM_FIELD_TYPE_COMPONENTS,
   ],
   exports: [
-    FormlyModule, FormlyBootstrapModule,
-    ...CUSTOM_FIELD_TYPE_COMPONENTS
+    // FormlyModule, FormlyBootstrapModule,
+    // ...CUSTOM_FIELD_TYPE_COMPONENTS
   ]
 })
 export class FormlyAddOnsModule {

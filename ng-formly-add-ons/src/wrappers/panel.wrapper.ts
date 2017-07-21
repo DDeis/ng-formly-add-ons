@@ -1,6 +1,6 @@
 import { Component, ViewContainerRef, ViewChild } from '@angular/core';
 
-import { FieldWrapper } from 'ng-formly';
+import { FieldWrapper } from '@ng-formly/core';
 
 @Component({
   selector: 'formly-wrapper-panel',

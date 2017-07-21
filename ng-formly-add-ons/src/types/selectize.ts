@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 
-import { FieldType } from 'ng-formly';
+import { FieldType } from '@ng-formly/core';
 
 @Component({
   selector: 'formly-selector',

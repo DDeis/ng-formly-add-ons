@@ -1,9 +1,9 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
-import * as cloneDeep from 'lodash.clonedeep';
+import * as clonedeep_ from 'lodash.clonedeep';
 
-import { FieldType, FormlyFormBuilder, FormlyConfig, FormlyFieldConfig } from 'ng-formly';
+import { FieldType, FormlyFormBuilder, FormlyConfig, FormlyFieldConfig } from '@ng-formly/core';
 
 @Component({
   selector: 'formly-multilang-field',
@@ -51,6 +51,9 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
     const fields = [];
 
     languages.forEach(lang => {
+
+      let clonedeep: any = (<any>clonedeep_).default || clonedeep_; // Prevent "Cannot call a namespace ('cloneDeep')" error
+
       const newField: FormlyFieldConfig = Object.assign(
         {
           id: `${key}-${lang}`,
@@ -58,7 +61,7 @@ export class FormlyMultilangField extends FieldType implements OnInit, OnChanges
           templateOptions: {},
           validators: {}
         },
-        cloneDeep(baseField)
+        clonedeep(baseField)
       );
 
       // Set validators

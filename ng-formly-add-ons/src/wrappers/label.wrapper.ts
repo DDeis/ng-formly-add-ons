@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormlyWrapperLabel as OriginalFormlyWrapperLabel } from 'ng-formly';
+
+import { FieldWrapper } from '@ng-formly/core';
 
 @Component({
   selector: 'formly-wrapper-label',
@@ -10,7 +11,7 @@ import { FormlyWrapperLabel as OriginalFormlyWrapperLabel } from 'ng-formly';
     <ng-container #fieldComponent></ng-container>
   `,
 })
-export class FormlyLabelWrapper extends OriginalFormlyWrapperLabel {
+export class FormlyLabelWrapper extends FieldWrapper {
   isRequired(): boolean {
     return !!this.to.required;
   }

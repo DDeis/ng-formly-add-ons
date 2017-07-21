@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { FieldType, FormlyFormBuilder } from 'ng-formly';
+import { FieldType, FormlyFormBuilder } from '@ng-formly/core';
 
-import * as cloneDeep from 'lodash.clonedeep';
+import * as clonedeep_ from 'lodash.clonedeep';
 
 @Component({
   selector: 'formly-repeat-section',
@@ -41,7 +41,9 @@ export class FormlyRepeatSection extends FieldType implements OnInit {
   }
 
   get newFields() {
-    return cloneDeep(this.field.fieldArray.fieldGroup);
+    let clonedeep: any = (<any>clonedeep_).default || clonedeep_; // Prevent "Cannot call a namespace ('cloneDeep')" error
+
+    return clonedeep(this.field.fieldArray.fieldGroup);
   }
 
   get addButtonText(): string {

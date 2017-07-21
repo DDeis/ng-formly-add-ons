@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
-import { FieldType, FormlyFieldInput as OriginalFormlyFieldInput } from 'ng-formly';
+import { FieldType } from '@ng-formly/core';
 
 @Component({
   selector: 'formly-field-input',
   template: `
-      <input class="form-control" 
-             [type]="type" 
-             [formControl]="formControl" 
-             [formlyAttributes]="field" 
+      <input class="form-control"
+             [type]="type"
+             [formControl]="formControl"
+             [formlyAttributes]="field"
              [ngClass]="inputClass" />
     `,
 })

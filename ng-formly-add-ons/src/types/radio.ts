@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 
-import { FormlyFieldRadio as OriginalFormlyFieldRadio } from 'ng-formly';
+import { FieldType } from '@ng-formly/core';
 
 @Component({
   selector: 'formly-field-radio',
@@ -9,11 +9,11 @@ import { FormlyFieldRadio as OriginalFormlyFieldRadio } from 'ng-formly';
     <div [formGroup]="form">
       <div *ngFor="let option of to.options" class="form-check">
         <label [ngClass]="labelClass">
-          <input type="radio" 
-                 [ngClass]="inputClass" 
-                 [name]="id" 
-                 [value]="option.key" 
-                 [formControl]="formControl" 
+          <input type="radio"
+                 [ngClass]="inputClass"
+                 [name]="id"
+                 [value]="option.key"
+                 [formControl]="formControl"
                  [formlyAttributes]="field">
           {{ option.value }}
           <span [ngClass]="indicatorClass"></span>
@@ -22,7 +22,7 @@ import { FormlyFieldRadio as OriginalFormlyFieldRadio } from 'ng-formly';
     </div>
   `,
 })
-export class FormlyFieldRadio extends OriginalFormlyFieldRadio {
+export class FormlyFieldRadio extends FieldType {
 
   get labelClass(): string {
     return this.to.labelClass || 'custom-control custom-radio';

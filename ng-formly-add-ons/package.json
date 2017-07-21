@@ -8,11 +8,6 @@
   "peerDependencies": {
     "@angular/core": "^4.3.0",
     "@angular/common": "^4.3.0",
-    "@angular/forms": "^4.3.0",
-    "ng-formly": "^1.0.0-rc.10",
-    "ng-selectize": "^1.0.11"
-  },
-  "devDependencies": {
-    "ng-formly": "^1.0.0-rc.10"
+    "@angular/forms": "^4.3.0"
   }
 }

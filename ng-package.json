@@ -6,7 +6,8 @@
   "lib": {
     "entryFile": "src/public_api.ts",
     "externals": {
-      "rxjs/**": "Rx"
+      "rxjs/operator/debounceTime": "Rx.Observable.prototype",
+      "rxjs/operator/map": "Rx.Observable.prototype"
     }
   }
 

@@ -24,7 +24,7 @@
       "scripts": [
 				"../node_modules/jquery/dist/jquery.min.js",
 				"../node_modules/jqueryui/jquery-ui.min.js",
-				"../node_modules/selectize/dist/js/standalone/selectize.min.js"
+				"../node_modules/ng-selectize/selectize/selectize.standalone.js"
 			],
       "environmentSource": "environments/environment.ts",
       "environments": {

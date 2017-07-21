@@ -19,5 +19,8 @@ import { CUSTOM_FORMLY_CONFIG, CUSTOM_FIELD_TYPE_COMPONENTS } from './formly-add
   declarations: [
     ...CUSTOM_FIELD_TYPE_COMPONENTS,
   ],
+  exports: [
+    FormlyModule,
+  ]
 })
 export class FormlyAddOnsModule { }

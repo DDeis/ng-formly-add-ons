@@ -8,7 +8,8 @@
     "externals": {
       "rxjs/operator/debounceTime": "Rx.Observable.prototype",
       "rxjs/operator/map": "Rx.Observable.prototype"
-    }
+    },
+    "commonjs": ["node_modules/lodash.clonedeep/**"]
   }
 
 }

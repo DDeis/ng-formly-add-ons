@@ -13,6 +13,7 @@ import { ValidationService } from './validation.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+// export class AppComponent implements AfterViewChecked
 export class AppComponent implements AfterViewChecked {
   @ViewChild('langTabs') langTabs: NgbTabset;
   @ViewChild('formly') formly: FormlyForm;

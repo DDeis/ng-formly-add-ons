@@ -21,8 +21,8 @@ import { AppComponent } from './app.component';
     NgSelectizeModule,
     NgbModule.forRoot(),
 
-    FormlyAddOnsModule,
     FormlyBootstrapModule,
+    FormlyAddOnsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

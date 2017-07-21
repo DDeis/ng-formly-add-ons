@@ -29,7 +29,7 @@ export const CUSTOM_FORMLY_CONFIG: ConfigOption  = {
     { name: 'textarea', component: FormlyFieldTextArea },
     { name: 'select', component: FormlyFieldSelect },
     { name: 'radio', component: FormlyFieldRadio },
-    { name: 'selectize', component: FormlyFieldSelectize, wrappers: ['fieldset', 'label'] },
+    { name: 'selectize', component: FormlyFieldSelectize, wrappers: [] }, // TODO: add wrappers ['fieldset', 'label']
 
     { name: 'repeat-section', component: FormlyRepeatSection },
     { name: 'multilang-field', component: FormlyMultilangField },
